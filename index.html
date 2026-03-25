@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoLux Baku</title>
+  <style>
+    body {font-family: Arial; margin:0; background:#111; color:#fff}
+    header {padding:20px; background:#000; display:flex; justify-content:space-between}
+    a {color:white; text-decoration:none}
+    .hero {padding:80px; text-align:center; background:url('https://images.unsplash.com/photo-1511919884226-fd3cad34687c') center/cover}
+    .btn {background:gold; padding:10px 20px; color:black; border:none; cursor:pointer}
+    .cars {display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:20px}
+    .card {background:#222; padding:15px; border-radius:10px}
+    img {width:100%; border-radius:10px}
+    footer {padding:20px; text-align:center; background:#000}
+    .whatsapp {position:fixed; bottom:20px; right:20px; background:green; padding:15px; border-radius:50%}
+  </style>
+</head>
+<body><header>
+  <h2>AutoLux Baku</h2>
+  <nav>
+    <a href="#cars">Maşınlar</a>
+    <a href="#contact">Əlaqə</a>
+  </nav>
+</header><section class="hero">
+  <h1>Arzuladığınız avtomobil burada</h1>
+  <p>Ən yaxşı qiymət, ən yüksək keyfiyyət</p>
+  <button class="btn" onclick="document.getElementById('cars').scrollIntoView()">Maşınlara bax</button>
+</section><section id="cars" class="cars">
+  <div class="card">
+    <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e">
+    <h3>BMW X5</h3>
+    <p>2022 • 3.0 • 85,000 AZN</p>
+    <button class="btn" onclick="whatsapp()">WhatsApp</button>
+  </div>  <div class="card">
+    <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a">
+    <h3>Mercedes E200</h3>
+    <p>2021 • 2.0 • 65,000 AZN</p>
+    <button class="btn" onclick="whatsapp()">WhatsApp</button>
+  </div>
+</section><section id="contact" style="padding:20px">
+  <h2>Əlaqə</h2>
+  <p><a href="tel:+994504620027">+994 50 462 00 27</a></p>
+  <p><a href="tel:+994517415706">+994 51 741 57 06</a></p>
+  <iframe src="https://maps.google.com/maps?q=baku&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="300"></iframe>
+</section><footer>
+  <p>© 2026 Auto
