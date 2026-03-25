@@ -1,47 +1,161 @@
+
 <!DOCTYPE html><html lang="az">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AutoLux Baku</title>
-  <style>
-    body {font-family: Arial; margin:0; background:#111; color:#fff}
-    header {padding:20px; background:#000; display:flex; justify-content:space-between}
-    a {color:white; text-decoration:none}
-    .hero {padding:80px; text-align:center; background:url('https://images.unsplash.com/photo-1511919884226-fd3cad34687c') center/cover}
-    .btn {background:gold; padding:10px 20px; color:black; border:none; cursor:pointer}
-    .cars {display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; padding:20px}
-    .card {background:#222; padding:15px; border-radius:10px}
-    img {width:100%; border-radius:10px}
-    footer {padding:20px; text-align:center; background:#000}
-    .whatsapp {position:fixed; bottom:20px; right:20px; background:green; padding:15px; border-radius:50%}
-  </style>
-</head>
+  <title>ELİT AVTO 777</title>  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+    body{background:#0f0f0f;color:#fff}
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 40px;
+      background:#000;
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+
+    header h2{color:gold}
+
+    nav a{
+      margin-left:20px;
+      text-decoration:none;
+      color:#fff;
+      transition:0.3s;
+    }
+
+    nav a:hover{color:gold}
+
+    .hero{
+      height:90vh;
+      background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70') center/cover;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:20px;
+    }
+
+    .hero h1{font-size:48px;margin-bottom:10px}
+    .hero p{opacity:0.8;margin-bottom:20px}
+
+    .btn{
+      background:gold;
+      border:none;
+      padding:12px 25px;
+      font-weight:bold;
+      cursor:pointer;
+      border-radius:8px;
+      transition:0.3s;
+    }
+
+    .btn:hover{transform:scale(1.05)}
+
+    .section-title{
+      text-align:center;
+      margin:40px 0 20px;
+      font-size:28px;
+    }
+
+    .cars{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:25px;
+      padding:20px 40px;
+    }
+
+    .card{
+      background:#1a1a1a;
+      border-radius:15px;
+      overflow:hidden;
+      transition:0.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-5px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .card img{width:100%;height:200px;object-fit:cover}
+
+    .card-content{padding:15px}
+
+    .price{color:gold;font-weight:bold;margin:10px 0}
+
+    .contact{
+      padding:40px;
+      text-align:center;
+    }
+
+    iframe{border-radius:10px;margin-top:20px}
+
+    footer{
+      background:#000;
+      text-align:center;
+      padding:20px;
+      margin-top:40px;
+    }
+
+    .whatsapp{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#25D366;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+      cursor:pointer;
+      box-shadow:0 5px 15px rgba(0,0,0,0.4);
+    }
+
+  </style></head>
 <body><header>
-  <h2>AutoLux Baku</h2>
+  <h2>ELİT AVTO 777</h2>
   <nav>
     <a href="#cars">Maşınlar</a>
     <a href="#contact">Əlaqə</a>
   </nav>
 </header><section class="hero">
-  <h1>Arzuladığınız avtomobil burada</h1>
-  <p>Ən yaxşı qiymət, ən yüksək keyfiyyət</p>
-  <button class="btn" onclick="document.getElementById('cars').scrollIntoView()">Maşınlara bax</button>
-</section><section id="cars" class="cars">
-  <div class="card">
+  <h1>Premium avtomobillər burada</h1>
+  <p>Keyfiyyət, etibar və sərfəli qiymət</p>
+  <button class="btn" onclick="scrollToCars()">Maşınlara bax</button>
+</section><h2 class="section-title">Maşınlar</h2><section id="cars" class="cars">  <div class="card">
     <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e">
-    <h3>BMW X5</h3>
-    <p>2022 • 3.0 • 85,000 AZN</p>
-    <button class="btn" onclick="whatsapp()">WhatsApp</button>
+    <div class="card-content">
+      <h3>BMW X5</h3>
+      <p>2022 • 3.0 • Full paket</p>
+      <p class="price">85,000 AZN</p>
+      <button class="btn" onclick="whatsapp('BMW X5')">WhatsApp</button>
+    </div>
   </div>  <div class="card">
     <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a">
-    <h3>Mercedes E200</h3>
-    <p>2021 • 2.0 • 65,000 AZN</p>
-    <button class="btn" onclick="whatsapp()">WhatsApp</button>
-  </div>
-</section><section id="contact" style="padding:20px">
+    <div class="card-content">
+      <h3>Mercedes E200</h3>
+      <p>2021 • 2.0 • AMG paket</p>
+      <p class="price">65,000 AZN</p>
+      <button class="btn" onclick="whatsapp('Mercedes E200')">WhatsApp</button>
+    </div>
+  </div></section><section id="contact" class="contact">
   <h2>Əlaqə</h2>
-  <p><a href="tel:+994504620027">+994 50 462 00 27</a></p>
-  <p><a href="tel:+994517415706">+994 51 741 57 06</a></p>
-  <iframe src="https://maps.google.com/maps?q=baku&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="300"></iframe>
+  <p><a href="tel:+994517089500" style="color:gold">+994 51 708 95 00</a></p>  <iframe src="https://maps.google.com/maps?q=baku&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="300"></iframe>
 </section><footer>
-  <p>© 2026 Auto
+  <p>© 2026 ELİT AVTO 777</p>
+</footer><div class="whatsapp" onclick="whatsapp('Salam')">💬</div><script>
+function scrollToCars(){
+  document.getElementById('cars').scrollIntoView({behavior:'smooth'})
+}
+
+function whatsapp(car){
+  let msg = encodeURIComponent('Salam, ' + car + ' haqqında məlumat almaq istəyirəm')
+  window.open('https://wa.me/994517089500?text=' + msg,'_blank')
+}
+</script></body>
+</html>
