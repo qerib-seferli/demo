@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>ELİT AVTO 777</title>
+  <meta name="theme-color" content="#0f141b">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+  <header class="topbar" id="site-header"></header>
+
+  <main class="page-shell">
+    <section class="hero-card glass">
+      <h1 class="hero-title">ELİT AVTO 777</h1>
+      <p class="hero-text">Premium avtomobil elanları, sürətli axtarış, sevimlilər, profil və sayt daxilində mesajlaşma.</p>
+
+      <div class="brand-strip-wrap glass">
+        <div class="brand-strip" id="brand-strip"></div>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="search-keyword" placeholder="Marka, model və ya qeyd ilə axtar...">
+        <div class="grid-2">
+          <select id="filter-brand"><option value="">Marka</option></select>
+          <select id="filter-model"><option value="">Model</option></select>
+        </div>
+        <div class="grid-2">
+          <select id="filter-condition">
+            <option value="">Yeni / Sürülmüş</option>
+            <option value="Yeni">Yeni</option>
+            <option value="Sürülmüş">Sürülmüş</option>
+          </select>
+          <select id="filter-fuel">
+            <option value="">Yanacaq növü</option>
+            <option>Benzin</option>
+            <option>Dizel</option>
+            <option>Hibrid</option>
+            <option>Plug-in Hybrid</option>
+            <option>Elektrik</option>
+            <option>Qaz</option>
+          </select>
+        </div>
+        <div class="grid-2">
+          <select id="filter-currency">
+            <option value="">Valyuta</option>
+            <option>AZN</option>
+            <option>USD</option>
+            <option>EUR</option>
+          </select>
+          <select id="filter-color">
+            <option value="">Rəng</option>
+            <option>Ağ</option>
+            <option>Qara</option>
+            <option>Boz</option>
+            <option>Gümüşü</option>
+            <option>Mavi</option>
+            <option>Qırmızı</option>
+            <option>Yaşıl</option>
+            <option>Sarı</option>
+            <option>Qəhvəyi</option>
+          </select>
+        </div>
+        <div class="grid-2">
+          <input type="number" id="price-min" placeholder="Min qiymət">
+          <input type="number" id="price-max" placeholder="Max qiymət">
+        </div>
+        <div class="grid-3">
+          <label class="meta-chip"><input type="checkbox" id="filter-credit"> Kredit</label>
+          <label class="meta-chip"><input type="checkbox" id="filter-barter"> Barter</label>
+          <select id="filter-sort">
+            <option value="newest">Ən yenilər</option>
+            <option value="price_desc">Əvvəl bahalı</option>
+            <option value="price_asc">Əvvəl ucuz</option>
+            <option value="year_desc">Buraxılış ili (yuxarı)</option>
+            <option value="mileage_asc">Az yürüş</option>
+          </select>
+        </div>
+        <button class="pill-btn" id="search-btn">Axtarışı tətbiq et</button>
+      </div>
+    </section>
+
+    <div class="section-title">
+      <h2>Əsas elanlar</h2>
+      <p id="listing-count">0 elan</p>
+    </div>
+    <section class="listings-grid" id="listing-grid"></section>
+    <div class="footer-note">© 2026 ELİT AVTO 777</div>
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+
+  <div class="modal" id="chat-modal">
+    <div class="modal-sheet">
+      <div class="section-title">
+        <h2>Söhbət</h2>
+        <button class="icon-btn" id="close-chat"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="grid-2">
+        <input id="chat-input" placeholder="Mesajınızı yazın...">
+        <button class="pill-btn" id="chat-send">Göndər</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

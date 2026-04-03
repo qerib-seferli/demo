@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Elan | ELİT AVTO 777</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="detail">
+  <header class="topbar" id="site-header"></header>
+
+  <main class="page-shell">
+    <section class="detail-card" id="detail-root"></section>
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+
+  <div class="modal" id="chat-modal">
+    <div class="modal-sheet">
+      <div class="section-title">
+        <h2>Söhbət</h2>
+        <button class="icon-btn" id="close-chat"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="grid-2">
+        <input id="chat-input" placeholder="Mesajınızı yazın...">
+        <button class="pill-btn" id="chat-send">Göndər</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

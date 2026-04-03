@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Giriş / Qeydiyyat | ELİT AVTO 777</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="login">
+  <header class="topbar" id="site-header"></header>
+
+  <main class="page-shell">
+    <section class="auth-card">
+      <h1 class="hero-title" style="font-size:28px;margin-bottom:10px;">Xoş gəlmisiniz</h1>
+      <p class="hero-text" style="margin-bottom:14px;">Qeydiyyatdan keçin, profil yaradın, elanları bəyənin və mesajlaşın.</p>
+
+      <div class="auth-tabs">
+        <button class="tab-btn active" data-auth-tab="login">Giriş</button>
+        <button class="tab-btn" data-auth-tab="register">Qeydiyyat</button>
+        <button class="tab-btn" data-auth-tab="forgot">Şifrə</button>
+      </div>
+
+      <form id="login-form">
+        <div class="search-box">
+          <input type="email" name="email" placeholder="Email">
+          <input type="password" name="password" placeholder="Şifrə">
+          <button class="pill-btn" type="submit">Daxil ol</button>
+        </div>
+      </form>
+
+      <form id="register-form" class="hidden">
+        <div class="search-box">
+          <input type="text" name="full_name" placeholder="Ad Soyad" required>
+          <input type="tel" name="phone" placeholder="Telefon nömrəsi">
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="password" placeholder="Şifrə" required>
+          <input type="text" name="address" placeholder="Ünvan">
+          <button class="pill-btn" type="submit">Qeydiyyatdan keç</button>
+        </div>
+      </form>
+
+      <form id="forgot-form" class="hidden">
+        <div class="search-box">
+          <input type="email" name="email" placeholder="Şifrə sıfırlama üçün email" required>
+          <button class="pill-btn" type="submit">Sıfırlama linki göndər</button>
+        </div>
+      </form>
+
+      <p class="upload-note" style="margin-top:14px;">
+        Qeyd: Bu quruluşda təhlükəsizlik üçün istifadəçi şifrələri görünmür və saxlanmır. Şifrə unudulanda email ilə sıfırlama linki göndərilir.
+      </p>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
