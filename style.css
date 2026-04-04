@@ -424,6 +424,161 @@ select option { color: #111; }
 
 
 
+
+
+
+
+.card-topfav-only {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.listing-card .card-body {
+  gap: 10px;
+}
+
+.listing-main-text {
+  display: grid;
+  gap: 4px;
+}
+
+.listing-main-text .price {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.listing-main-text .card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f2f2f2;
+  line-height: 1.25;
+}
+
+.listing-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.listing-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  color: #fff;
+}
+
+.condition-flag {
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 0 10px rgba(255,255,255,.10);
+}
+
+.credit-flag {
+  border-color: rgba(40,167,69,.55);
+  color: #dfffe8;
+  box-shadow:
+    0 0 8px rgba(40,167,69,.28),
+    0 0 18px rgba(40,167,69,.16);
+  animation: greenPulse 1.8s ease-in-out infinite;
+}
+
+.barter-flag {
+  border-color: rgba(227,10,23,.55);
+  color: #ffe3e5;
+  box-shadow:
+    0 0 8px rgba(227,10,23,.28),
+    0 0 18px rgba(227,10,23,.16);
+  animation: redPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes greenPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 8px rgba(40,167,69,.20),
+      0 0 18px rgba(40,167,69,.10);
+  }
+  50% {
+    box-shadow:
+      0 0 12px rgba(40,167,69,.40),
+      0 0 28px rgba(40,167,69,.22);
+  }
+}
+
+@keyframes redPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 8px rgba(227,10,23,.20),
+      0 0 18px rgba(227,10,23,.10);
+  }
+  50% {
+    box-shadow:
+      0 0 12px rgba(227,10,23,.42),
+      0 0 28px rgba(227,10,23,.24);
+  }
+}
+
+.compact-specs {
+  gap: 8px;
+}
+
+.listing-card-footer {
+  display: grid;
+  grid-template-columns: 1fr 54px;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.whatsapp-card-btn {
+  min-width: 54px;
+  padding: 0;
+}
+
+.whatsapp-card-btn i {
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .listing-main-text .price {
+    font-size: 18px;
+  }
+
+  .listing-main-text .card-title {
+    font-size: 14px;
+  }
+
+  .listing-flag {
+    font-size: 11px;
+    min-height: 30px;
+    padding: 0 9px;
+  }
+
+  .listing-card-footer {
+    grid-template-columns: 1fr 48px;
+  }
+
+  .whatsapp-card-btn {
+    min-width: 48px;
+  }
+
+  .whatsapp-card-btn i {
+    font-size: 18px;
+  }
+}
+
+
+
+
+
+
 @media (max-width: 980px) {
   .cards-grid, .mobile-cards-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
   .profile-grid, .admin-grid, .detail-card { grid-template-columns: 1fr; }
