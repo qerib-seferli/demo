@@ -10,9 +10,9 @@
 </head>
 <body data-page="profile">
   <header class="site-header">
-    <div class="container header-row">
+    <div class="container header-row compact-header">
       <a class="brand" href="index.html">
-        <img class="brand-logo" src="foto/logo.png" alt="ELİT AVTO 777">
+        <img class="brand-logo" src="foto/elit_avto_777_logo.png" alt="ELİT AVTO 777">
         <div><h2>ELİT AVTO 777</h2><p>Şəxsi kabinet</p></div>
       </a>
       <div class="header-actions"><button class="btn btn-outline btn-small" id="logoutBtn">Çıxış</button></div>
@@ -20,36 +20,36 @@
   </header>
 
   <main class="page">
-    <div class="container profile-grid">
-      <section class="sidebar-card">
+    <div class="container profile-grid mobile-profile-grid">
+      <section class="sidebar-card profile-photo-card">
         <h3>Profil şəkli</h3>
-        <div class="main-photo" style="aspect-ratio:1/1;max-width:260px;margin-top:12px;">
+        <div class="main-photo profile-avatar-box">
           <img id="avatarPreview" src="foto/user-placeholder.png" alt="Profil şəkli">
         </div>
         <div class="field" style="margin-top:12px;">
-          <label>Avatar yüklə</label>
+          <label>Qalereyadan şəkil seç</label>
           <input type="file" id="avatarInput" accept="image/*">
         </div>
       </section>
 
       <section class="form-card">
         <h3>Profil məlumatları</h3>
-        <form id="profileForm">
-          <div class="field-inline">
+        <form id="profileForm" class="compact-form-stack">
+          <div class="field-inline mobile-single-inline">
             <div class="field"><label>Ad</label><input id="profileName" type="text"></div>
             <div class="field"><label>Soyad</label><input id="profileSurname" type="text"></div>
           </div>
-          <div class="field-inline">
+          <div class="field-inline mobile-single-inline">
             <div class="field"><label>Email</label><input id="profileEmail" type="email" disabled></div>
-            <div class="field"><label>Telefon</label><input id="profilePhone" type="tel"></div>
+            <div class="field"><label>Telefon</label><input id="profilePhone" type="tel" placeholder="+994501112233"></div>
           </div>
           <div class="field"><label>Ünvan</label><input id="profileAddress" type="text"></div>
-          <div class="field"><label>Haqqında</label><textarea id="profileBio"></textarea></div>
-          <div class="filter-actions">
+          <div class="field"><label>Haqqında</label><textarea id="profileBio" placeholder="Qısa məlumat"></textarea></div>
+          <div class="filter-actions profile-actions-stack">
             <button class="btn" type="submit">Yadda saxla</button>
-            <button class="btn btn-outline" id="resetPasswordBtn" type="button">Şifrə sıfırlama emaili</button>
+            <button class="btn btn-outline" id="resetPasswordBtn" type="button">Şifrə yenilə</button>
           </div>
-          <p class="muted">Təhlükəsizlik üçün istifadəçi şifrələri açıq şəkildə saxlanmır və görünmür.</p>
+          <p class="muted">Şifrə açıq görünmür. Yeniləmə üçün email vasitəsilə sıfırlama linki göndərilir.</p>
           <p id="profileMsg" class="muted"></p>
         </form>
       </section>
@@ -58,11 +58,11 @@
 
   <nav class="bottom-nav">
     <div class="container nav-row">
-      <a href="sevimliler.html"><i class="fa-regular fa-heart"></i><strong>Sevimlilər</strong></a>
-      <a href="mesajlar.html"><i class="fa-regular fa-message"></i><strong>Mesaj</strong></a>
-      <a href="index.html"><span class="home-fab"><i class="fa-solid fa-house"></i></span><strong>Əsas</strong></a>
-      <a href="profile.html"><i class="fa-solid fa-user"></i><strong>Profil</strong></a>
-      <a href="https://wa.me/994517089500?text=Salam,%20EL%C4%B0T%20AVTO%20777-d%C9%99ki%20elanla%20ba%C4%9Fl%C4%B1%20sual%C4%B1m%20var..." target="_blank"><i class="fa-brands fa-whatsapp"></i><strong>WhatsApp</strong></a>
+      <a href="sevimliler.html" data-nav="favorites"><i class="fa-regular fa-heart"></i><strong>Sevimlilər</strong></a>
+      <a href="mesajlar.html" data-nav="messages" class="nav-has-badge"><span class="notify-badge" id="bottomMsgCount">0</span><i class="fa-regular fa-message"></i><strong>Mesaj</strong></a>
+      <a href="index.html" data-nav="home"><span class="home-fab"><i class="fa-solid fa-house"></i></span><strong>Əsas</strong></a>
+      <a href="profile.html" data-nav="profile"><i class="fa-regular fa-user"></i><strong>Profil</strong></a>
+      <a href="https://wa.me/994517089500?text=Salam,%20EL%C4%B0T%20AVTO%20777-d%C9%99ki%20bu%20elanla%20ba%C4%9Fl%C4%B1%20sual%C4%B1m%20var..." target="_blank"><i class="fa-brands fa-whatsapp"></i><strong>WhatsApp</strong></a>
     </div>
   </nav>
 

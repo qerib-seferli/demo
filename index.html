@@ -12,12 +12,12 @@
 </head>
 <body data-page="home">
   <header class="site-header">
-    <div class="container header-row">
+    <div class="container header-row compact-header">
       <a class="brand" href="index.html">
-        <img class="brand-logo" src="foto/logo.png" alt="ELİT AVTO 777">
+        <img class="brand-logo" src="foto/elit_avto_777_logo.png" alt="ELİT AVTO 777">
         <div>
           <h1>ELİT AVTO 777</h1>
-          <p>Premium Avtomobil Bazarı</p>
+          <p>Premium avtomobil bazarı</p>
         </div>
       </a>
       <div class="header-actions">
@@ -26,100 +26,110 @@
     </div>
   </header>
 
-  <main class="page">
-    <div class="container">
-      <section class="hero">
-        <div class="hero-card">
-         
-          <h3>Bərdə şəhərində sürətli, təhlükəsiz və güvənli avtomobil alqı-satqısı</h3>
-       
-          <div class="stats">
+  <main class="page home-page">
+    <div class="container home-stack">
+      <section class="hero panel">
+        <div class="hero-card hero-compact">
+          <span class="badge"><i class="fa-solid fa-bolt"></i> Mobile-first premium UI</span>
+          <h2>Bərdə şəhərində güvənli avtomobil alqı-satqısı</h2>
+          <p>ELİT AVTO 777 üçün neon detalı, tünd fonlu, sürətli və rahat elan platforması.</p>
+          <div class="stats mobile-stats">
             <div class="stat"><strong id="statTotal">0</strong><span>Aktiv elan</span></div>
-            <div class="stat"><strong id="statFav">0</strong><span>Seçilmişlər</span></div>
-            <div class="stat"><strong>24/7</strong><span>WhatsApp dəstək</span></div>
+            <div class="stat"><strong id="statFav">0</strong><span>Sevimli</span></div>
+            <div class="stat"><strong>24/7</strong><span>WhatsApp</span></div>
           </div>
-        </div>
-
-        <div class="panel logo-ticker">
-          <div class="ticker-track" id="tickerTrack"></div>
         </div>
       </section>
 
-      <section class="panel filter-wrap">
-        <div class="filter-header">
-          <h3><i class="fa-solid fa-sliders"></i> Advanced Filter</h3>
-          <span class="badge">Mobile-first</span>
+      <section class="panel brand-scroll-wrap">
+        <div class="section-head slim-head">
+          <h3>Markalar</h3>
+          <span class="muted small-text">Barmaqla sürüşdür və toxun</span>
         </div>
-        <div class="filter-grid">
-          <div class="field">
+        <div class="brand-scroll" id="tickerTrack"></div>
+      </section>
+
+      <section class="panel filter-wrap sticky-filter-panel">
+        <div class="filter-header always-visible-filter">
+          <h3><i class="fa-solid fa-magnifying-glass"></i> Axtarış</h3>
+          <button class="btn btn-outline btn-small" id="toggleAdvancedFilters" type="button">Ətraflı axtar</button>
+        </div>
+
+        <div class="quick-filter-row">
+          <div class="field grow-field">
             <label>Marka</label>
             <select id="filterBrand"><option value="">Hamısı</option></select>
           </div>
-          <div class="field">
+          <div class="field grow-field">
             <label>Model</label>
             <select id="filterModel"><option value="">Hamısı</option></select>
           </div>
-          <div class="field field-inline">
-            <div>
-              <label>Qiymət min</label>
-              <input id="filterPriceMin" type="number" placeholder="5000">
-            </div>
-            <div>
-              <label>Qiymət max</label>
-              <input id="filterPriceMax" type="number" placeholder="120000">
-            </div>
-          </div>
-          <div class="field">
-            <label>Valyuta</label>
-            <select id="filterCurrency">
-              <option value="">Hamısı</option>
-              <option value="AZN">AZN</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Vəziyyət</label>
-            <div class="switches">
-              <label class="chip"><input type="radio" name="condition" value="" checked> Hamısı</label>
-              <label class="chip"><input type="radio" name="condition" value="Yeni"> Yeni</label>
-              <label class="chip"><input type="radio" name="condition" value="Sürülmüş"> Sürülmüş</label>
-            </div>
-          </div>
-          <div class="field">
-            <label>Əlavələr</label>
-            <div class="switches">
-              <label class="chip"><input type="checkbox" id="filterCredit"> Kredit</label>
-              <label class="chip"><input type="checkbox" id="filterBarter"> Barter</label>
-            </div>
-          </div>
-          <div class="field">
-            <label>Yanacaq</label>
-            <select id="filterFuel">
-              <option value="">Hamısı</option>
-              <option>Benzin</option>
-              <option>Dizel</option>
-              <option>Qaz</option>
-              <option>Hibrid</option>
-              <option>Elektrik</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Rəng</label>
-            <select id="filterColor">
-              <option value="">Hamısı</option>
-              <option value="Qara">⚫ Qara</option>
-              <option value="Ağ">⚪ Ağ</option>
-              <option value="Qırmızı">🔴 Qırmızı</option>
-              <option value="Gümüşü">⚪ Gümüşü</option>
-              <option value="Boz">⚫ Boz</option>
-              <option value="Mavi">🔵 Mavi</option>
-            </select>
-          </div>
+          <button class="btn search-btn-mobile" id="applyFilters" type="button"><i class="fa-solid fa-filter"></i> Axtar</button>
         </div>
-        <div class="filter-actions">
-          <button class="btn" id="applyFilters"><i class="fa-solid fa-magnifying-glass"></i> Axtar</button>
-          <button class="btn btn-outline" id="resetFilters">Sıfırla</button>
+
+        <div class="advanced-filters collapsed" id="advancedFilters">
+          <div class="filter-grid mobile-priority-grid">
+            <div class="field field-inline tight-inline">
+              <div>
+                <label>Qiymət min</label>
+                <input id="filterPriceMin" type="number" placeholder="5000">
+              </div>
+              <div>
+                <label>Qiymət max</label>
+                <input id="filterPriceMax" type="number" placeholder="120000">
+              </div>
+            </div>
+            <div class="field">
+              <label>Valyuta</label>
+              <select id="filterCurrency">
+                <option value="">Hamısı</option>
+                <option value="AZN">AZN</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Vəziyyət</label>
+              <div class="switches circle-switches">
+                <label class="chip radio-chip"><input type="radio" name="condition" value="" checked><span class="dot-radio"></span>Hamısı</label>
+                <label class="chip radio-chip"><input type="radio" name="condition" value="Yeni"><span class="dot-radio"></span>Yeni</label>
+                <label class="chip radio-chip"><input type="radio" name="condition" value="Sürülmüş"><span class="dot-radio"></span>Sürülmüş</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Əlavələr</label>
+              <div class="switches circle-switches">
+                <label class="chip check-chip"><input type="checkbox" id="filterCredit"><span class="dot-radio"></span>Kredit</label>
+                <label class="chip check-chip"><input type="checkbox" id="filterBarter"><span class="dot-radio"></span>Barter</label>
+              </div>
+            </div>
+            <div class="field">
+              <label>Yanacaq</label>
+              <select id="filterFuel">
+                <option value="">Hamısı</option>
+                <option>Benzin</option>
+                <option>Dizel</option>
+                <option>Qaz</option>
+                <option>Hibrid</option>
+                <option>Elektrik</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Rəng</label>
+              <select id="filterColor">
+                <option value="">Hamısı</option>
+                <option value="Qara">⚫ Qara</option>
+                <option value="Ağ">⚪ Ağ</option>
+                <option value="Qırmızı">🔴 Qırmızı</option>
+                <option value="Gümüşü">⚪ Gümüşü</option>
+                <option value="Boz">⚫ Boz</option>
+                <option value="Mavi">🔵 Mavi</option>
+              </select>
+            </div>
+          </div>
+          <div class="filter-actions compact-actions">
+            <button class="btn btn-outline" id="resetFilters" type="button">Sıfırla</button>
+          </div>
         </div>
       </section>
 
@@ -128,18 +138,18 @@
           <h3>Son Elanlar</h3>
           <a href="sevimliler.html" class="badge"><i class="fa-regular fa-heart"></i> Sevimlilər</a>
         </div>
-        <div id="listingGrid" class="cards-grid"></div>
+        <div id="listingGrid" class="cards-grid mobile-cards-grid"></div>
       </section>
     </div>
   </main>
 
   <nav class="bottom-nav">
     <div class="container nav-row">
-      <a href="sevimliler.html"><i class="fa-regular fa-heart"></i><strong>Sevimlilər</strong></a>
-      <a href="mesajlar.html"><span class="notify-badge" id="bottomMsgCount">0</span><i class="fa-regular fa-message"></i><strong>Mesaj</strong></a>
-      <a href="index.html"><span class="home-fab"><i class="fa-solid fa-house"></i></span><strong>Əsas</strong></a>
-      <a href="profile.html"><i class="fa-regular fa-user"></i><strong>Profil</strong></a>
-      <a href="https://wa.me/994517089500?text=Salam,%20EL%C4%B0T%20AVTO%20777-d%C9%99ki%20elanla%20ba%C4%9Fl%C4%B1%20sual%C4%B1m%20var..." target="_blank"><i class="fa-brands fa-whatsapp"></i><strong>WhatsApp</strong></a>
+      <a href="sevimliler.html" data-nav="favorites"><i class="fa-regular fa-heart"></i><strong>Sevimlilər</strong></a>
+      <a href="mesajlar.html" data-nav="messages" class="nav-has-badge"><span class="notify-badge" id="bottomMsgCount">0</span><i class="fa-regular fa-message"></i><strong>Mesaj</strong></a>
+      <a href="index.html" data-nav="home"><span class="home-fab"><i class="fa-solid fa-house"></i></span><strong>Əsas</strong></a>
+      <a href="profile.html" data-nav="profile"><i class="fa-regular fa-user"></i><strong>Profil</strong></a>
+      <a href="https://wa.me/994517089500?text=Salam,%20EL%C4%B0T%20AVTO%20777-d%C9%99ki%20bu%20elanla%20ba%C4%9Fl%C4%B1%20sual%C4%B1m%20var..." target="_blank"><i class="fa-brands fa-whatsapp"></i><strong>WhatsApp</strong></a>
     </div>
   </nav>
 
