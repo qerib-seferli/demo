@@ -173,6 +173,29 @@ function startCardSlides(root = document) {
   });
 }
 
+
+document.querySelectorAll('.brand-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const brand = btn.dataset.brand;
+    filterByBrand(brand);
+  });
+});
+
+function filterByBrand(brand) {
+  // Burada Supabase-dən və ya mövcud elan array-indən filtr et
+  console.log("Seçilən marka:", brand);
+
+  // Misal:
+  // loadCars({ brand: brand });
+
+  // Əgər axtarış select-in varsa:
+  const brandSelect = document.getElementById('filterBrand');
+  if (brandSelect) {
+    brandSelect.value = brand;
+  }
+}
+
+
 async function getFavoriteIds() {
   const user = await getSessionUser();
   if (!user) return JSON.parse(localStorage.getItem('guest_favorites') || '[]');
