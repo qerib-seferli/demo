@@ -93,14 +93,55 @@
       </section>
 
       <section class="table-card" style="margin-top:14px;">
-        <div class="section-head"><h3>Canlı çat</h3></div>
-        <div class="table-wrap">
-          <table class="table">
-            <thead><tr><th>Göndərən</th><th>Mesaj</th><th>Tarix</th></tr></thead>
-            <tbody id="adminMessagesTable"></tbody>
-          </table>
+  <div class="section-head">
+    <h3>Canlı çat idarəsi</h3>
+    <span class="badge">Realtime dəstək</span>
+  </div>
+
+  <div class="admin-chat-workspace">
+    <aside class="chat-sidebar-panel admin-chat-sidebar">
+      <div class="chat-sidebar-head">
+        <div>
+          <h3>İstifadəçilər</h3>
+          <p class="muted small-text">Mesaj yazan şəxslər</p>
         </div>
-      </section>
+        <span class="badge" id="adminChatCount">0</span>
+      </div>
+      <div id="adminChatThreads" class="chat-threads"></div>
+    </aside>
+
+    <section class="chat-thread-panel admin-chat-thread">
+      <div class="chat-thread-head">
+        <div class="chat-thread-user" id="adminChatThreadUser">
+          <div class="chat-thread-avatar">
+            <img id="adminChatThreadAvatar" src="foto/user-placeholder.png" alt="avatar">
+          </div>
+          <div>
+            <h3 id="adminChatThreadTitle">İstifadəçi seçin</h3>
+            <p id="adminChatThreadMeta" class="muted small-text">Söhbət görünəcək</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="adminChatMessages" class="chat-messages"></div>
+
+      <div id="adminChatEditorBanner" class="editor-banner hidden">
+        <div>
+          <strong>Mesaj redaktə olunur</strong>
+          <p id="adminChatEditorPreview">—</p>
+        </div>
+        <button id="adminCancelEditBtn" class="btn btn-outline btn-small" type="button">Ləğv et</button>
+      </div>
+
+      <div class="chat-composer">
+        <input id="adminChatInput" type="text" placeholder="İstifadəçiyə cavab yazın...">
+        <button class="btn" id="adminSendChatBtn" type="button">
+          <i class="fa-solid fa-paper-plane"></i> Göndər
+        </button>
+      </div>
+    </section>
+  </div>
+</section>
     </div>
   </main>
 
