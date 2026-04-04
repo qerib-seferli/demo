@@ -19,27 +19,59 @@
     </div>
   </header>
 
-  <main class="page">
-    <div class="container">
-      <section class="sidebar-card">
-        <h3>Canlı mesajlaşma</h3>
-        <p class="muted" style="margin-top:10px;">İstifadəçi yalnız öz söhbətini görür. Admin bütün istifadəçilərin mesajlarını görə bilir.</p>
-        <div class="kpi-grid" style="margin-top:14px;">
-          <div class="kpi"><strong id="chatUserCount">0</strong><span>Mesaj</span></div>
-          <div class="kpi"><strong>Realtime</strong><span>Canlı</span></div>
-          <div class="kpi"><strong>24/7</strong><span>Dəstək</span></div>
-        </div>
-      </section>
 
-      <section class="sidebar-card" style="margin-top:14px;">
-        <div id="chatList" class="chat-box"></div>
-        <div class="chat-input-row">
+  
+  <main class="page">
+  <div class="container">
+    <section class="chat-workspace">
+      <aside class="chat-sidebar-panel" id="chatSidebarPanel">
+        <div class="chat-sidebar-head">
+          <div>
+            <h3>Söhbətlər</h3>
+            <p class="muted small-text" id="chatSidebarNote">Söhbət seçin</p>
+          </div>
+          <span class="badge" id="chatUserCount">0</span>
+        </div>
+
+        <div id="chatThreads" class="chat-threads"></div>
+      </aside>
+
+      <section class="chat-thread-panel">
+        <div class="chat-thread-head">
+          <div class="chat-thread-user" id="chatThreadUser">
+            <div class="chat-thread-avatar">
+              <img id="chatThreadAvatar" src="foto/user-placeholder.png" alt="avatar">
+            </div>
+            <div>
+              <h3 id="chatThreadTitle">Dəstək söhbəti</h3>
+              <p id="chatThreadMeta" class="muted small-text">Mesajlaşma hazırdır</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="chatMessages" class="chat-messages"></div>
+
+        <div id="chatEditorBanner" class="editor-banner hidden">
+          <div>
+            <strong>Mesaj redaktə olunur</strong>
+            <p id="chatEditorPreview">—</p>
+          </div>
+          <button id="cancelEditBtn" class="btn btn-outline btn-small" type="button">Ləğv et</button>
+        </div>
+
+        <div class="chat-composer">
           <input id="chatInput" type="text" placeholder="Mesajınızı yazın...">
-          <button class="btn" id="sendChatBtn" type="button">Göndər</button>
+          <button class="btn" id="sendChatBtn" type="button">
+            <i class="fa-solid fa-paper-plane"></i> Göndər
+          </button>
         </div>
       </section>
-    </div>
-  </main>
+    </section>
+  </div>
+</main>
+
+
+  
 
   <nav class="bottom-nav">
     <div class="container nav-row">
