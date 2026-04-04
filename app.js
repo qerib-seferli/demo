@@ -192,10 +192,10 @@ function createCard(item, favoriteIds = []) {
         </div>
 
         <div class="specs compact-specs">
-          <div class="spec"><small>Mühərrik</small><strong>${item.engine || '-'}</strong></div>
-          <div class="spec"><small>Yürüş</small><strong>${Number(item.mileage || 0).toLocaleString('az-AZ')} km</strong></div>
+        
           <div class="spec"><small>İl</small><strong>${item.year || '-'}</strong></div>
-          <div class="spec"><small>Yanacaq</small><strong>${item.fuel_type || '-'}</strong></div>
+          <div class="spec"><small>Yürüş</small><strong>${Number(item.mileage || 0).toLocaleString('az-AZ')} km</strong></div>
+          
         </div>
 
         <div class="card-footer listing-card-footer">
