@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mesajlar • ELİT AVTO 777</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="messages">
+  <header class="topbar glass sticky-top">
+    <div class="topbar-inner container">
+      <a class="brand" href="index.html">
+        <img src="foto/elit_avto_777_logo.png" alt="ELİT AVTO 777" class="brand-logo" onerror="this.style.display='none'">
+        <div>
+          <strong>ELİT AVTO 777</strong>
+          <span>Onlayn çat</span>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <main class="page with-bottom-nav">
+    <section class="container chat-page">
+      <aside class="chat-sidebar" id="conversationList"></aside>
+      <section class="chat-main">
+        <div class="chat-head" id="chatHead">Söhbət seçin</div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <form class="chat-form" id="chatForm">
+          <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." required>
+          <button class="primary-btn" type="submit"><i class="fa-regular fa-paper-plane"></i></button>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <nav class="bottom-nav sticky-bottom">
+    <a href="sevimliler.html" class="nav-item"><i class="fa-regular fa-heart"></i><span>Sevimlilər</span></a>
+    <a href="messages.html" class="nav-item active badge-parent"><i class="fa-regular fa-comments"></i><span>Mesaj</span><b class="badge hidden" id="globalUnreadBadge">0</b></a>
+    <a href="index.html" class="nav-item nav-home"><i class="fa-solid fa-house"></i><span>Əsas</span></a>
+    <a href="profile.html" class="nav-item"><i class="fa-regular fa-user"></i><span>Profil</span></a>
+    <a href="https://wa.me/994517089500" class="nav-item whatsapp-link" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>
