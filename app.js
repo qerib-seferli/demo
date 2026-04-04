@@ -745,4 +745,51 @@ async function init() {
   if (page === 'admin') await initAdmin();
 }
 
+
+
+const brandsMarquee = document.querySelector('.brands-marquee');
+
+if (brandsMarquee) {
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  brandsMarquee.addEventListener('mousedown', (e) => {
+    isDown = true;
+    brandsMarquee.classList.add('dragging');
+    startX = e.pageX - brandsMarquee.offsetLeft;
+    scrollLeft = brandsMarquee.scrollLeft;
+  });
+
+  brandsMarquee.addEventListener('mouseleave', () => {
+    isDown = false;
+    brandsMarquee.classList.remove('dragging');
+  });
+
+  brandsMarquee.addEventListener('mouseup', () => {
+    isDown = false;
+    brandsMarquee.classList.remove('dragging');
+  });
+
+  brandsMarquee.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - brandsMarquee.offsetLeft;
+    const walk = (x - startX) * 1.2;
+    brandsMarquee.scrollLeft = scrollLeft - walk;
+  });
+
+  brandsMarquee.addEventListener('touchstart', () => {
+    brandsMarquee.classList.add('dragging');
+  }, { passive: true });
+
+  brandsMarquee.addEventListener('touchend', () => {
+    brandsMarquee.classList.remove('dragging');
+  }, { passive: true });
+}
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', init);
