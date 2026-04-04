@@ -181,18 +181,24 @@ document.querySelectorAll('.brand-chip').forEach(btn => {
   });
 });
 
-function filterByBrand(brand) {
-  // Burada Supabase-dən və ya mövcud elan array-indən filtr et
-  console.log("Seçilən marka:", brand);
-
-  // Misal:
-  // loadCars({ brand: brand });
-
-  // Əgər axtarış select-in varsa:
+async function filterByBrand(brand) {
   const brandSelect = document.getElementById('filterBrand');
-  if (brandSelect) {
-    brandSelect.value = brand;
+  if (!brandSelect) return;
+
+  brandSelect.value = brand;
+
+  if (window.__allListings) {
+    updateModels(window.__allListings);
   }
+
+  qsa('.brand-chip').forEach(x => x.classList.toggle('active', x.dataset.brand === brand));
+  qsa('.brand-item').forEach(x => x.classList.toggle('active', x.dataset.brand === brand));
+
+  const grid = qs('#listingGrid');
+  if (!grid) return;
+
+  const filtered = await fetchListings({ ...readFilters(), brand });
+  renderListingGrid(filtered, await getFavoriteIds(), grid);
 }
 
 
@@ -314,6 +320,8 @@ function renderTicker(listings = []) {
 }
 
 async function initHome() {
+  await renderHomeHeaderAuth();
+  
   const grid = qs('#listingGrid');
   const listings = await fetchListings();
   window.__allListings = listings;
@@ -460,24 +468,43 @@ async function initDetail() {
   const id = params.get('id');
   const root = qs('#detailRoot');
   if (!root) return;
-  if (!id) { root.innerHTML = '<div class="empty-state">Elan tapılmadı.</div>'; return; }
+
+  if (!id) {
+    root.innerHTML = '<div class="empty-state">Elan tapılmadı.</div>';
+    return;
+  }
+
   const { data } = await supabaseClient.from('elanlar').select('*').eq('id', id).maybeSingle();
-  if (!data) { root.innerHTML = '<div class="empty-state">Elan tapılmadı.</div>'; return; }
+
+  if (!data) {
+    root.innerHTML = '<div class="empty-state">Elan tapılmadı.</div>';
+    return;
+  }
+
   const images = Array.isArray(data.images) && data.images.length ? data.images : ['foto/car-placeholder.jpg'];
+  const favoriteIds = await getFavoriteIds();
+  const isFav = favoriteIds.includes(data.id);
 
   root.innerHTML = `
     <section class="detail-card">
       <div class="gallery">
-        <div class="main-photo"><img id="detailMainImage" src="${images[0]}" alt="${data.brand} ${data.model}"></div>
-        <div class="thumbs">${images.map(src => `<button type="button"><img src="${src}" alt="thumb"></button>`).join('')}</div>
+        <div class="main-photo">
+          <img id="detailMainImage" src="${images[0]}" alt="${data.brand} ${data.model}">
+        </div>
+        <div class="thumbs">
+          ${images.map(src => `<button type="button"><img src="${src}" alt="thumb"></button>`).join('')}
+        </div>
       </div>
+
       <div class="sidebar-card">
         <h3>${data.brand} ${data.model}</h3>
         <p class="price" style="margin:10px 0 12px;">${fmt(data.price, data.currency)}</p>
+
         <div class="icon-row">
           ${data.is_credit ? '<span class="badge"><i class="fa-solid fa-wallet"></i> Kredit var</span>' : ''}
           ${data.is_barter ? '<span class="badge"><i class="fa-solid fa-arrow-right-arrow-left"></i> Barter var</span>' : ''}
         </div>
+
         <div class="detail-meta" style="margin-top:14px;">
           <div class="spec"><small>İl</small><strong>${data.year || '-'}</strong></div>
           <div class="spec"><small>Yürüş</small><strong>${Number(data.mileage || 0).toLocaleString('az-AZ')} km</strong></div>
@@ -485,27 +512,52 @@ async function initDetail() {
           <div class="spec"><small>Yanacaq</small><strong>${data.fuel_type || '-'}</strong></div>
           <div class="spec"><small>Qutu</small><strong>${data.transmission || '-'}</strong></div>
           <div class="spec"><small>Rəng</small><strong>${data.color || '-'}</strong></div>
+          <div class="spec"><small>Ban növü</small><strong>${data.body_type || '-'}</strong></div>
+          <div class="spec"><small>Vəziyyət</small><strong>${data.condition || '-'}</strong></div>
         </div>
-        <div class="detail-text" style="margin-top:14px;">${data.description || 'Təsvir əlavə edilməyib.'}</div>
+
+        <div class="detail-text" style="margin-top:14px;">
+          ${data.description || 'Təsvir əlavə edilməyib.'}
+        </div>
+
         <div class="panel" style="padding:14px;margin-top:14px;">
           <strong>ELİT AVTO 777 qeydi</strong>
-          <p class="detail-text" style="margin-top:8px;">${data.salon_note || 'Salon qeydi əlavə edilməyib.'}</p>
+          <p class="detail-text" style="margin-top:8px;">
+            ${data.salon_note || 'Salon qeydi əlavə edilməyib.'}
+          </p>
         </div>
+
         <div class="filter-actions" style="padding-top:14px;">
-          <button class="btn" id="detailFavBtn" type="button">Sevimlilərə əlavə et</button>
-          <a class="btn btn-green" target="_blank" href="https://wa.me/994517089500?text=${encodeURIComponent(`Salam, ${data.brand} ${data.model} elanına baxdım, ətraflı məlumat istəyirəm.`)}">WhatsApp</a>
+          <button class="btn ${isFav ? 'btn-outline' : ''}" id="detailFavBtn" type="button">
+            ${isFav ? 'Sevimlilərdən çıxart' : 'Sevimlilərə əlavə et'}
+          </button>
+          <a class="btn btn-green" target="_blank" href="https://wa.me/994517089500?text=${encodeURIComponent(`Salam, ${data.brand} ${data.model} elanına baxdım, ətraflı məlumat istəyirəm.`)}">
+            WhatsApp
+          </a>
         </div>
       </div>
     </section>
   `;
 
-  qsa('.thumbs button').forEach((btn, i) => btn.addEventListener('click', () => qs('#detailMainImage').src = images[i]));
+  qsa('.thumbs button').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      qs('#detailMainImage').src = images[i];
+    });
+  });
+
   qs('#detailFavBtn')?.addEventListener('click', async () => {
     await toggleFavorite(data.id);
-    qs('#detailFavBtn').textContent = 'Yadda saxlanıldı';
+    const currentFavs = await getFavoriteIds();
+    const nowFav = currentFavs.includes(data.id);
+
+    const favBtn = qs('#detailFavBtn');
+    favBtn.textContent = nowFav ? 'Sevimlilərdən çıxart' : 'Sevimlilərə əlavə et';
+    favBtn.classList.toggle('btn-outline', nowFav);
   });
+
   refreshMessageBadge();
 }
+
 
 async function initFavorites() {
   const grid = qs('#favoritesGrid');
@@ -733,9 +785,14 @@ async function initAdmin() {
   await Promise.all([loadStats(), loadListings(), loadUsers(), loadMessages()]);
 }
 
+
+
 async function init() {
   markActiveNav();
+  await renderHomeHeaderAuth();
+
   const page = getPage();
+
   if (page === 'home') await initHome();
   if (page === 'login') await initLogin();
   if (page === 'profile') await initProfile();
