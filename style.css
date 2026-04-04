@@ -317,25 +317,27 @@ select option { color: #111; }
 
 
 
+
+
 .brands-section {
   width: 100%;
   overflow: hidden;
-  margin: 12px 0 16px;
+  margin: 10px 0 16px;
 }
 
-.brands-scroll {
+.brands-marquee {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.brands-track {
   display: flex;
+  align-items: center;
   gap: 10px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 6px 12px 10px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.brands-scroll::-webkit-scrollbar {
-  display: none;
+  width: max-content;
+  animation: brandScroll 38s linear infinite;
+  will-change: transform;
 }
 
 .brand-chip {
@@ -374,14 +376,28 @@ select option { color: #111; }
 .brand-chip:hover,
 .brand-chip:active {
   border-color: #E30A17;
-  transform: translateY(-2px);
   box-shadow: 0 0 12px rgba(227, 10, 23, 0.35);
+  transform: translateY(-2px);
+}
+
+@keyframes brandScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* istəyə görə mouse gətiriləndə dayansın */
+.brands-marquee:hover .brands-track {
+  animation-play-state: paused;
 }
 
 @media (max-width: 768px) {
-  .brands-scroll {
+  .brands-track {
     gap: 8px;
-    padding: 6px 10px 10px;
+    animation: brandScroll 30s linear infinite;
   }
 
   .brand-chip {
@@ -399,6 +415,8 @@ select option { color: #111; }
     font-size: 11px;
   }
 }
+
+
 
 
 
