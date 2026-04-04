@@ -3,69 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Giriş / Qeydiyyat • ELİT AVTO 777</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>Giriş / Qeydiyyat - ELİT AVTO 777</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="login">
-  <header class="topbar glass sticky-top">
-    <div class="topbar-inner container">
+  <header class="site-header">
+    <div class="container header-row">
       <a class="brand" href="index.html">
-        <img src="foto/elit_avto_777_logo.png" alt="ELİT AVTO 777" class="brand-logo" onerror="this.style.display='none'">
-        <div>
-          <strong>ELİT AVTO 777</strong>
-          <span>Giriş və qeydiyyat</span>
-        </div>
+        <img class="brand-logo" src="foto/logo.png" alt="ELİT AVTO 777">
+        <div><h2>ELİT AVTO 777</h2><p>Giriş və Qeydiyyat</p></div>
       </a>
+      <a href="index.html" class="btn btn-outline btn-small">Əsas Səhifə</a>
     </div>
   </header>
 
-  <main class="page narrow-page with-bottom-nav">
-    <section class="auth-card container">
-      <div class="auth-tabs">
-        <button class="auth-tab active" data-target="signinPane">Giriş</button>
-        <button class="auth-tab" data-target="signupPane">Qeydiyyat</button>
-      </div>
+  <main class="page">
+    <div class="container auth-shell">
+      <section class="form-card">
+        <div class="auth-tabs">
+          <button class="btn" id="tabLogin">Giriş</button>
+          <button class="btn btn-outline" id="tabRegister">Qeydiyyat</button>
+        </div>
 
-      <div class="auth-pane" id="signinPane">
-        <h1>Hesaba daxil olun</h1>
-        <p class="muted">Hazır versiyada giriş email + şifrə ilədir. Telefon nömrəsi profil məlumatı kimi saxlanılır.</p>
-        <form id="signinForm" class="form-stack">
-          <label class="field"><span>Email</span><input type="email" name="email" required placeholder="example@mail.com"></label>
-          <label class="field"><span>Şifrə</span><input type="password" name="password" required minlength="6" placeholder="••••••••"></label>
-          <button class="primary-btn" type="submit">Daxil ol</button>
+        <div class="auth-tabs">
+          <button class="btn btn-small" id="modeEmail">Email</button>
+          <button class="btn btn-outline btn-small" id="modePhone">Telefon OTP</button>
+        </div>
+
+        <form id="loginForm" class="hidden">
+          <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="mail@example.com" required></div>
+          <div class="field"><label>Şifrə</label><input type="password" id="loginPassword" placeholder="******" required></div>
+          <div class="filter-actions"><button class="btn" type="submit">Daxil ol</button></div>
         </form>
 
-        <form id="forgotForm" class="inline-form">
-          <input type="email" name="email" required placeholder="Şifrə sıfırlama emaili üçün email yazın">
-          <button class="ghost-btn" type="submit">Şifrəni unutdum</button>
+        <form id="registerForm" class="hidden">
+          <div class="field-inline">
+            <div class="field"><label>Ad</label><input type="text" id="regName" required></div>
+            <div class="field"><label>Soyad</label><input type="text" id="regSurname" required></div>
+          </div>
+          <div class="field-inline">
+            <div class="field"><label>Email</label><input type="email" id="regEmail"></div>
+            <div class="field"><label>Telefon</label><input type="tel" id="regPhone" placeholder="+994501112233"></div>
+          </div>
+          <div class="field"><label>Şifrə</label><input type="password" id="regPassword" required></div>
+          <div class="filter-actions"><button class="btn" type="submit">Qeydiyyatdan keç</button></div>
         </form>
-      </div>
 
-      <div class="auth-pane hidden" id="signupPane">
-        <h1>Yeni profil yaradın</h1>
-        <form id="signupForm" class="form-stack">
-          <label class="field"><span>Ad Soyad</span><input type="text" name="full_name" required></label>
-          <label class="field"><span>Telefon</span><input type="tel" name="phone" placeholder="+994..." required></label>
-          <label class="field"><span>Email</span><input type="email" name="email" required></label>
-          <label class="field"><span>Ünvan</span><input type="text" name="address" placeholder="Bərdə şəhəri"></label>
-          <label class="field"><span>Şifrə</span><input type="password" name="password" required minlength="6"></label>
-          <button class="primary-btn" type="submit">Qeydiyyatdan keç</button>
+        <form id="phoneForm" class="hidden">
+          <div class="field"><label>Telefon nömrəsi</label><input type="tel" id="otpPhone" placeholder="+994501112233"></div>
+          <div class="field"><label>OTP kodu (gəlibsə)</label><input type="text" id="otpCode" placeholder="123456"></div>
+          <div class="filter-actions">
+            <button class="btn" type="button" id="sendOtpBtn">OTP göndər</button>
+            <button class="btn btn-outline" type="button" id="verifyOtpBtn">OTP təsdiq et</button>
+          </div>
+          <p class="muted">Qeyd: Bu rejim işləsin deyə Supabase Auth daxilində Phone provider aktiv edilməlidir.</p>
         </form>
-      </div>
-    </section>
+
+        <p id="authMsg" class="muted"></p>
+      </section>
+    </div>
   </main>
-
-  <nav class="bottom-nav sticky-bottom">
-    <a href="sevimliler.html" class="nav-item"><i class="fa-regular fa-heart"></i><span>Sevimlilər</span></a>
-    <a href="messages.html" class="nav-item badge-parent"><i class="fa-regular fa-comments"></i><span>Mesaj</span><b class="badge hidden" id="globalUnreadBadge">0</b></a>
-    <a href="index.html" class="nav-item nav-home"><i class="fa-solid fa-house"></i><span>Əsas</span></a>
-    <a href="profile.html" class="nav-item active"><i class="fa-regular fa-user"></i><span>Profil</span></a>
-    <a href="https://wa.me/994517089500" class="nav-item whatsapp-link" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>
-  </nav>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>

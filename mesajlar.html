@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mesajlar - ELİT AVTO 777</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="messages">
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="foto/logo.png" alt="ELİT AVTO 777">
+        <div><h2>ELİT AVTO 777</h2><p>Canlı çat</p></div>
+      </a>
+      <a href="index.html" class="btn btn-outline btn-small">Əsas</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="container chat-shell">
+      <section class="sidebar-card">
+        <h3>Çat məlumatı</h3>
+        <p class="muted" style="margin-top:10px;">İstifadəçi və admin arasında canlı mesajlaşma. İstifadəçi yalnız öz mesajlarını görür. Admin bütün istifadəçi söhbətlərini görə bilir.</p>
+        <div class="kpi-grid" style="margin-top:14px;">
+          <div class="kpi"><strong id="chatUserCount">0</strong><span>Mesaj</span></div>
+          <div class="kpi"><strong>Realtime</strong><span>Canlı yenilənmə</span></div>
+          <div class="kpi"><strong>24/7</strong><span>Dəstək</span></div>
+        </div>
+      </section>
+
+      <section class="chat-card">
+        <div id="chatList" class="chat-list"></div>
+        <div class="chat-input">
+          <input id="chatInput" type="text" placeholder="Mesajınızı yazın...">
+          <button class="btn" id="sendChatBtn">Göndər</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <div class="container nav-row">
+      <a href="sevimliler.html"><i class="fa-regular fa-heart"></i><strong>Sevimlilər</strong></a>
+      <a href="mesajlar.html"><i class="fa-solid fa-message"></i><strong>Mesaj</strong></a>
+      <a href="index.html"><span class="home-fab"><i class="fa-solid fa-house"></i></span><strong>Əsas</strong></a>
+      <a href="profile.html"><i class="fa-regular fa-user"></i><strong>Profil</strong></a>
+      <a href="https://wa.me/994517089500?text=Salam,%20EL%C4%B0T%20AVTO%20777-d%C9%99ki%20elanla%20ba%C4%9Fl%C4%B1%20sual%C4%B1m%20var..." target="_blank"><i class="fa-brands fa-whatsapp"></i><strong>WhatsApp</strong></a>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body>
+</html>

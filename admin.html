@@ -3,108 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel • ELİT AVTO 777</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <title>Admin Panel - ELİT AVTO 777</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="admin">
-  <header class="topbar glass sticky-top">
-    <div class="topbar-inner container">
+  <header class="site-header">
+    <div class="container header-row">
       <a class="brand" href="index.html">
-        <img src="foto/elit_avto_777_logo.png" alt="ELİT AVTO 777" class="brand-logo" onerror="this.style.display='none'">
-        <div>
-          <strong>ELİT AVTO 777</strong>
-          <span>Admin idarəetmə paneli</span>
-        </div>
+        <img class="brand-logo" src="foto/logo.png" alt="ELİT AVTO 777">
+        <div><h2>ELİT AVTO 777</h2><p>Admin idarə paneli</p></div>
       </a>
-      <div class="topbar-actions">
-        <a class="icon-btn" href="profile.html"><i class="fa-regular fa-user"></i></a>
-      </div>
+      <a href="profile.html" class="btn btn-outline btn-small">Profil</a>
     </div>
   </header>
 
-  <main class="page admin-page with-bottom-nav">
-    <section class="container admin-shell">
+  <main class="page">
+    <div class="container">
+      <div class="kpi-grid" style="margin-bottom:14px;">
+        <div class="kpi"><strong id="adminTotalListings">0</strong><span>Elan sayı</span></div>
+        <div class="kpi"><strong id="adminTotalUsers">0</strong><span>İstifadəçi</span></div>
+        <div class="kpi"><strong id="adminTotalMessages">0</strong><span>Mesaj</span></div>
+      </div>
+
       <div class="admin-grid">
-        <section class="admin-card admin-form-card">
-          <div class="section-head"><h2>Elan əlavə / redaktə</h2></div>
-          <form id="listingForm" class="form-stack">
-            <input type="hidden" name="id">
-            <label class="field"><span>Marka</span><select name="brand_slug" id="adminBrandSelect" required></select></label>
-            <label class="field"><span>Model</span><input type="text" name="model" required></label>
-            <div class="triple-grid">
-              <label class="field"><span>Buraxılış ili</span><input type="number" name="year" required></label>
-              <label class="field"><span>Mator</span><input type="text" name="engine" placeholder="2.0 Turbo"></label>
-              <label class="field"><span>Yürüş (km)</span><input type="number" name="mileage" required></label>
+        <section class="form-card">
+          <h3>Yeni elan əlavə et / redaktə et</h3>
+          <form id="listingForm">
+            <input type="hidden" id="listingId">
+            <div class="field-inline">
+              <div class="field"><label>Marka</label><input id="carBrand" required></div>
+              <div class="field"><label>Model</label><input id="carModel" required></div>
             </div>
-            <div class="triple-grid">
-              <label class="field"><span>Qiymət</span><input type="number" step="0.01" name="price" required></label>
-              <label class="field"><span>Valyuta</span><select name="currency"><option>AZN</option><option>USD</option><option>EUR</option></select></label>
-              <label class="field"><span>Yeni / Sürülmüş</span><select name="condition"><option>Yeni</option><option>Sürülmüş</option></select></label>
+            <div class="field-inline">
+              <div class="field"><label>Qiymət</label><input id="carPrice" type="number" required></div>
+              <div class="field"><label>Valyuta</label><select id="carCurrency"><option>AZN</option><option>USD</option><option>EUR</option></select></div>
             </div>
-            <div class="triple-grid">
-              <label class="field"><span>Rəng</span><input type="text" name="color" placeholder="Ağ"></label>
-              <label class="field"><span>Yanacaq</span><input type="text" name="fuel_type" placeholder="Benzin"></label>
-              <label class="field"><span>Sürətlər qutusu</span><input type="text" name="transmission" placeholder="Avtomat"></label>
+            <div class="field-inline">
+              <div class="field"><label>İl</label><input id="carYear" type="number" required></div>
+              <div class="field"><label>Yürüş (km)</label><input id="carMileage" type="number"></div>
             </div>
-            <label class="field"><span>Şəkillər (hər sətirdə bir URL)</span><textarea name="images" rows="5" placeholder="https://...jpg"></textarea></label>
-            <label class="field"><span>Açıqlama</span><textarea name="description" rows="5"></textarea></label>
-            <label class="field"><span>Qeyd</span><textarea name="note" rows="3" placeholder="Rəşad bəy tərəfindən qeyd..."></textarea></label>
-            <div class="toggle-row compact">
-              <label class="check-chip"><input type="checkbox" name="is_credit"> Kredit</label>
-              <label class="check-chip"><input type="checkbox" name="is_barter"> Barter</label>
-              <label class="check-chip"><input type="checkbox" name="status_active" checked> Aktiv</label>
+            <div class="field-inline">
+              <div class="field"><label>Mühərrik</label><input id="carEngine" placeholder="2.0 Turbo"></div>
+              <div class="field"><label>Yanacaq</label><select id="carFuel"><option>Benzin</option><option>Dizel</option><option>Qaz</option><option>Hibrid</option><option>Elektrik</option></select></div>
             </div>
-            <div class="inline-actions">
-              <button class="primary-btn" type="submit">Yadda saxla</button>
-              <button class="ghost-btn" type="button" id="resetListingFormBtn">Təmizlə</button>
+            <div class="field-inline">
+              <div class="field"><label>Sürətlər qutusu</label><input id="carTransmission" placeholder="Avtomat"></div>
+              <div class="field"><label>Rəng</label><input id="carColor" placeholder="Qara"></div>
             </div>
+            <div class="field-inline">
+              <div class="field"><label>Vəziyyət</label><select id="carCondition"><option>Yeni</option><option>Sürülmüş</option></select></div>
+              <div class="field"><label>Ban növü</label><input id="carBodyType" placeholder="Sedan"></div>
+            </div>
+            <div class="field-inline">
+              <div class="field"><label>Kredit</label><select id="carCredit"><option value="false">Xeyr</option><option value="true">Bəli</option></select></div>
+              <div class="field"><label>Barter</label><select id="carBarter"><option value="false">Xeyr</option><option value="true">Bəli</option></select></div>
+            </div>
+            <div class="field"><label>Şəkillər</label><input id="carImages" type="file" accept="image/*" multiple></div>
+            <div class="field"><label>Elit Avto 777 qeydi</label><textarea id="carNote" placeholder="Salondan xüsusi qeyd"></textarea></div>
+            <div class="field"><label>Təsvir</label><textarea id="carDescription" placeholder="Ətraflı məlumat"></textarea></div>
+            <div class="filter-actions">
+              <button class="btn" type="submit">Yadda saxla</button>
+              <button class="btn btn-outline" type="button" id="clearListingForm">Təmizlə</button>
+            </div>
+            <p id="adminMsg" class="muted"></p>
           </form>
         </section>
 
-        <section class="admin-card">
-          <div class="section-head"><h2>Elanlar</h2></div>
-          <div id="adminListings" class="admin-list"></div>
-        </section>
-
-        <section class="admin-card">
-          <div class="section-head"><h2>İstifadəçilər</h2></div>
-          <p class="muted">Admin istifadəçi məlumatlarını görə bilər, amma şifrələri görə bilməz. Təhlükəsiz üsul şifrə sıfırlama emaili göndərməkdir.</p>
-          <form id="adminResetPasswordForm" class="inline-form">
-            <input type="email" name="email" placeholder="İstifadəçi emaili" required>
-            <button class="ghost-btn" type="submit">Sıfırlama emaili göndər</button>
-          </form>
-          <div id="adminUsers" class="admin-list"></div>
-        </section>
-
-        <section class="admin-card">
-          <div class="section-head"><h2>Mesajlar</h2></div>
-          <div class="chat-page admin-chat-single">
-            <aside class="chat-sidebar" id="adminConversationList"></aside>
-            <section class="chat-main">
-              <div class="chat-head" id="adminChatHead">Söhbət seçin</div>
-              <div class="chat-messages" id="adminChatMessages"></div>
-              <form class="chat-form" id="adminChatForm">
-                <input type="text" id="adminChatInput" placeholder="Cavab yazın..." required>
-                <button class="primary-btn" type="submit"><i class="fa-regular fa-paper-plane"></i></button>
-              </form>
-            </section>
+        <section class="table-card">
+          <h3>Mövcud elanlar</h3>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Avto</th><th>Qiymət</th><th>İl</th><th>Əməliyyat</th></tr></thead>
+              <tbody id="adminListingTable"></tbody>
+            </table>
           </div>
         </section>
       </div>
-    </section>
-  </main>
 
-  <nav class="bottom-nav sticky-bottom">
-    <a href="sevimliler.html" class="nav-item"><i class="fa-regular fa-heart"></i><span>Sevimlilər</span></a>
-    <a href="messages.html" class="nav-item badge-parent"><i class="fa-regular fa-comments"></i><span>Mesaj</span><b class="badge hidden" id="globalUnreadBadge">0</b></a>
-    <a href="index.html" class="nav-item nav-home"><i class="fa-solid fa-house"></i><span>Əsas</span></a>
-    <a href="profile.html" class="nav-item"><i class="fa-regular fa-user"></i><span>Profil</span></a>
-    <a href="https://wa.me/994517089500" class="nav-item whatsapp-link" target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i><span>WhatsApp</span></a>
-  </nav>
+      <section class="table-card" style="margin-top:14px;">
+        <div class="section-head"><h3>İstifadəçilər</h3><span class="badge">Şifrələr təhlükəsizlik səbəbi ilə görünmür</span></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Email</th><th>Rol</th><th>Əməliyyat</th></tr></thead>
+            <tbody id="adminUsersTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="table-card" style="margin-top:14px;">
+        <div class="section-head"><h3>Canlı çat - admin görünüşü</h3></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Göndərən</th><th>Mesaj</th><th>Tarix</th></tr></thead>
+            <tbody id="adminMessagesTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
