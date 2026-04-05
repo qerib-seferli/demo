@@ -813,24 +813,61 @@ function bindFavoriteButtons(root = document) {
 }
 
 async function fetchListings(filters = {}) {
-  let query = supabaseClient.from('elanlar').select('*').eq('is_active', true).order('created_at', { ascending: false });
+  let query = supabaseClient
+    .from('elanlar')
+    .select('*')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false });
+
   if (filters.brand) query = query.eq('brand', filters.brand);
   if (filters.model) query = query.eq('model', filters.model);
   if (filters.currency) query = query.eq('currency', filters.currency);
   if (filters.condition) query = query.eq('condition', filters.condition);
   if (filters.fuel) query = query.eq('fuel_type', filters.fuel);
+  if (filters.drivetrain) query = query.eq('drivetrain', filters.drivetrain);
+  if (filters.transmission) query = query.eq('transmission', filters.transmission);
   if (filters.color) query = query.eq('color', filters.color);
+  if (filters.bodyType) query = query.eq('body_type', filters.bodyType);
+
   if (filters.credit) query = query.eq('is_credit', true);
   if (filters.barter) query = query.eq('is_barter', true);
+  if (filters.vip) query = query.eq('is_vip', true);
+  if (filters.damage) query = query.eq('has_damage', true);
+  if (filters.painted) query = query.eq('is_painted', true);
+
   if (filters.priceMin) query = query.gte('price', Number(filters.priceMin));
   if (filters.priceMax) query = query.lte('price', Number(filters.priceMax));
+
+  if (filters.yearMin) query = query.gte('year', Number(filters.yearMin));
+  if (filters.yearMax) query = query.lte('year', Number(filters.yearMax));
+
+  if (filters.mileageMin) query = query.gte('mileage', Number(filters.mileageMin));
+  if (filters.mileageMax) query = query.lte('mileage', Number(filters.mileageMax));
+
+  if (filters.seatsMin) query = query.gte('seats_count', Number(filters.seatsMin));
+  if (filters.seatsMax) query = query.lte('seats_count', Number(filters.seatsMax));
+
+  if (filters.engine) query = query.ilike('engine', `%${filters.engine}%`);
+
   const { data, error } = await query;
+
   if (error) {
     console.error(error.message);
     return [];
   }
-  return data || [];
+
+  let listings = data || [];
+
+  if (filters.equipment?.length) {
+    listings = listings.filter(item => {
+      const eq = Array.isArray(item.equipment) ? item.equipment : [];
+      return filters.equipment.every(x => eq.includes(x));
+    });
+  }
+
+  return listings;
 }
+
 
 function updateModels(listings) {
   const selectedBrand = qs('#filterBrand')?.value || '';
@@ -858,11 +895,25 @@ function readFilters() {
     priceMin: qs('#filterPriceMin')?.value || '',
     priceMax: qs('#filterPriceMax')?.value || '',
     currency: qs('#filterCurrency')?.value || '',
+    yearMin: qs('#filterYearMin')?.value || '',
+    yearMax: qs('#filterYearMax')?.value || '',
+    mileageMin: qs('#filterMileageMin')?.value || '',
+    mileageMax: qs('#filterMileageMax')?.value || '',
+    engine: qs('#filterEngine')?.value?.trim() || '',
+    fuel: qs('#filterFuel')?.value || '',
+    drivetrain: qs('#filterDrivetrain')?.value || '',
+    transmission: qs('#filterTransmission')?.value || '',
+    color: qs('#filterColor')?.value || '',
+    bodyType: qs('#filterBodyType')?.value || '',
     condition: qs('input[name="condition"]:checked')?.value || '',
+    seatsMin: qs('#filterSeatsMin')?.value || '',
+    seatsMax: qs('#filterSeatsMax')?.value || '',
     credit: qs('#filterCredit')?.checked || false,
     barter: qs('#filterBarter')?.checked || false,
-    fuel: qs('#filterFuel')?.value || '',
-    color: qs('#filterColor')?.value || '',
+    vip: qs('#filterVip')?.checked || false,
+    damage: qs('#filterDamage')?.checked || false,
+    painted: qs('#filterPainted')?.checked || false,
+    equipment: qsa('#filterEquipmentGrid input:checked').map(x => x.value)
   };
 }
 
@@ -931,19 +982,19 @@ async function initHome() {
   });
 
   qs('#resetFilters')?.addEventListener('click', async () => {
-    qsa('.filter-wrap input').forEach(input => {
-      if (input.type === 'checkbox') input.checked = false;
-      else if (input.type === 'radio') input.checked = input.value === '';
-      else input.value = '';
-    });
-
-    qsa('.filter-wrap select').forEach(select => select.value = '');
-    qsa('.brand-item').forEach(x => x.classList.remove('active'));
-    qsa('.brand-chip').forEach(x => x.classList.remove('active'));
-
-    updateModels(listings);
-    renderListingGrid(listings, await getFavoriteIds(), grid);
+  qsa('.filter-wrap input').forEach(input => {
+    if (input.type === 'checkbox') input.checked = false;
+    else if (input.type === 'radio') input.checked = input.value === '';
+    else input.value = '';
   });
+
+  qsa('.filter-wrap select').forEach(select => select.value = '');
+  qsa('.brand-item').forEach(x => x.classList.remove('active'));
+  qsa('.brand-chip').forEach(x => x.classList.remove('active'));
+
+  updateModels(listings);
+  renderListingGrid(listings, await getFavoriteIds(), grid);
+});
 
   qs('#toggleAdvancedFilters')?.addEventListener('click', () => {
     qs('#advancedFilters')?.classList.toggle('collapsed');
