@@ -24,57 +24,178 @@
       <div class="kpi-grid mobile-kpis" style="margin-bottom:14px;">
         <div class="kpi"><strong id="adminTotalListings">0</strong><span>Elan sayı</span></div>
         <div class="kpi"><strong id="adminTotalUsers">0</strong><span>İstifadəçi</span></div>
-        <div class="kpi"><strong id="adminTotalMessages">0</strong><span>Mesaj</span></div>
+        <button class="kpi kpi-button kpi-message-jump" id="adminMessageKpi" type="button">
+          <strong id="adminTotalMessages">0</strong>
+          <span>Yeni mesaj</span>
+          </button>
       </div>
 
       <div class="admin-grid mobile-admin-grid">
         <section class="form-card">
           <h3>Yeni elan əlavə et / redaktə et</h3>
-          <form id="listingForm" class="compact-form-stack">
-            <input type="hidden" id="listingId">
-            <div class="field-inline mobile-single-inline">
-              <div class="field"><label>Marka</label><input id="carBrand" required></div>
-              <div class="field"><label>Model</label><input id="carModel" required></div>
-            </div>
-            <div class="field-inline mobile-single-inline">
-              <div class="field"><label>Qiymət</label><input id="carPrice" type="number" required></div>
-              <div class="field"><label>Valyuta</label><select id="carCurrency"><option>AZN</option><option>USD</option><option>EUR</option></select></div>
-            </div>
-            <div class="field-inline mobile-single-inline">
-              <div class="field"><label>İl</label><input id="carYear" type="number" required></div>
-              <div class="field"><label>Yürüş (km)</label><input id="carMileage" type="number"></div>
-            </div>
-            <div class="field-inline mobile-single-inline">
-              <div class="field"><label>Mühərrik</label><input id="carEngine" placeholder="2.0 Turbo"></div>
-              <div class="field"><label>Yanacaq</label><select id="carFuel"><option>Benzin</option><option>Dizel</option><option>Qaz</option><option>Hibrid</option><option>Elektrik</option></select></div>
-            </div>
-            <div class="field-inline mobile-single-inline">
-              <div class="field"><label>Sürətlər qutusu</label><input id="carTransmission" placeholder="Avtomat"></div>
-              <div class="field"><label>Rəng</label><input id="carColor" placeholder="Qara"></div>
-            </div>
-            <div class="field-inline mobile-single-inline">
-              <div class="field"><label>Vəziyyət</label><select id="carCondition"><option>Yeni</option><option>Sürülmüş</option></select></div>
-              <div class="field"><label>Ban növü</label><input id="carBodyType" placeholder="Sedan"></div>
-            </div>
-            <div class="field-inline mobile-single-inline">
-              <div class="field"><label>Kredit</label><select id="carCredit"><option value="false">Xeyr</option><option value="true">Bəli</option></select></div>
-              <div class="field"><label>Barter</label><select id="carBarter"><option value="false">Xeyr</option><option value="true">Bəli</option></select></div>
-            </div>
-            <div class="field"><label>Şəkillər</label><input id="carImages" type="file" accept="image/*" multiple></div>
-            <div class="field"><label>ELİT AVTO 777 qeydi</label><textarea id="carNote" placeholder="Salondan xüsusi qeyd"></textarea></div>
-            <div class="field"><label>Təsvir</label><textarea id="carDescription" placeholder="Ətraflı məlumat"></textarea></div>
-            <div class="filter-actions profile-actions-stack">
-              <button class="btn" type="submit">Yadda saxla</button>
-              <button class="btn btn-outline" type="button" id="clearListingForm">Təmizlə</button>
-            </div>
-            <p id="adminMsg" class="muted"></p>
-          </form>
-        </section>
+  <form id="listingForm" class="compact-form-stack admin-listing-form-pro">
+  <input type="hidden" id="listingId">
 
-        <section class="table-card">
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>Marka</label>
+      <input id="carBrand" required placeholder="Məs: BMW">
+    </div>
+    <div class="field">
+      <label>Model</label>
+      <input id="carModel" required placeholder="Məs: X5">
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>Qiymət</label>
+      <input id="carPrice" type="number" required placeholder="12500">
+    </div>
+    <div class="field">
+      <label>Valyuta</label>
+      <select id="carCurrency">
+        <option value="AZN">AZN</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>İl</label>
+      <input id="carYear" type="number" required placeholder="2020">
+    </div>
+    <div class="field">
+      <label>Yürüş (km)</label>
+      <input id="carMileage" type="number" placeholder="85000">
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>Mühərrik</label>
+      <input id="carEngine" placeholder="2.0 Turbo">
+    </div>
+    <div class="field">
+      <label>Yanacaq</label>
+      <select id="carFuel"></select>
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>Ötürücü</label>
+      <select id="carDrivetrain"></select>
+    </div>
+    <div class="field">
+      <label>Sürətlər qutusu</label>
+      <select id="carTransmission"></select>
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>Rəng</label>
+      <select id="carColor"></select>
+    </div>
+    <div class="field">
+      <label>Ban növü</label>
+      <select id="carBodyType"></select>
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>Vəziyyət</label>
+      <select id="carCondition">
+        <option value="Yeni">Yeni</option>
+        <option value="Sürülmüş">Sürülmüş</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Oturacaq sayı</label>
+      <input id="carSeats" type="number" min="1" max="100" placeholder="5">
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>Kredit</label>
+      <select id="carCredit">
+        <option value="false">Xeyr</option>
+        <option value="true">Bəli</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Barter</label>
+      <select id="carBarter">
+        <option value="false">Xeyr</option>
+        <option value="true">Bəli</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>Vuruğu</label>
+      <select id="carDamage">
+        <option value="false">Yoxdur</option>
+        <option value="true">Var</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Rənglənib</label>
+      <select id="carPainted">
+        <option value="false">Rənglənməyib</option>
+        <option value="true">Rənglənib</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field-inline mobile-single-inline">
+    <div class="field">
+      <label>VIP elan</label>
+      <select id="carVip">
+        <option value="false">Yox</option>
+        <option value="true">Bəli</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Şəkillər</label>
+      <input id="carImages" type="file" accept="image/*" multiple>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Avtomobilin təchizatı</label>
+    <div id="carEquipment" class="equipment-grid"></div>
+  </div>
+
+  <div class="field">
+    <label>ELİT AVTO 777 qeydi</label>
+    <textarea id="carNote" placeholder="Salondan xüsusi qeyd"></textarea>
+  </div>
+
+  <div class="field">
+    <label>Təsvir</label>
+    <textarea id="carDescription" placeholder="Ətraflı məlumat"></textarea>
+  </div>
+
+  <div class="filter-actions profile-actions-stack">
+    <button class="btn" type="submit">Yadda saxla</button>
+    <button class="btn btn-outline" type="button" id="clearListingForm">Təmizlə</button>
+  </div>
+
+  <p id="adminMsg" class="muted"></p>
+</form>
+</section>
+
+        <section class="table-card listings-table-card">
           <h3>Mövcud elanlar</h3>
-          <div class="table-wrap">
-            <table class="table">
+          <div class="table-wrap admin-listings-scroll">
+            <table class="table admin-listings-table">
               <thead><tr><th>Avto</th><th>Qiymət</th><th>İl</th><th>Əməliyyat</th></tr></thead>
               <tbody id="adminListingTable"></tbody>
             </table>
