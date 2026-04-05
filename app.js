@@ -142,6 +142,181 @@ async function uploadFile(bucket, file, path) {
   return data.publicUrl;
 }
 
+
+
+let liveMessageChannel = null;
+let liveAdminChannel = null;
+
+function escapeHtml(value = '') {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function fullName(profile) {
+  return [profile?.name, profile?.surname].filter(Boolean).join(' ').trim() || profile?.email || 'İstifadəçi';
+}
+
+function avatarUrl(profile) {
+  return profile?.avatar_url || 'foto/user-placeholder.png';
+}
+
+function formatDateTime(dateStr) {
+  if (!dateStr) return '-';
+  return new Date(dateStr).toLocaleString('az-AZ', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+async function fetchUsersMap(ids = []) {
+  const uniqueIds = [...new Set(ids.filter(Boolean))];
+  if (!uniqueIds.length) return {};
+  const { data } = await supabaseClient.from('users').select('*').in('id', uniqueIds);
+  return Object.fromEntries((data || []).map(u => [u.id, u]));
+}
+
+async function fetchConversationMessages(chatUserId) {
+  const { data } = await supabaseClient
+    .from('messages')
+    .select('*')
+    .eq('user_id', chatUserId)
+    .order('created_at', { ascending: true });
+
+  return data || [];
+}
+
+async function fetchAdminThreads() {
+  const { data } = await supabaseClient
+    .from('messages')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  const all = data || [];
+  const grouped = new Map();
+
+  for (const msg of all) {
+    if (!msg.user_id) continue;
+    if (!grouped.has(msg.user_id)) {
+      grouped.set(msg.user_id, {
+        user_id: msg.user_id,
+        last_message: msg.message || '',
+        last_time: msg.created_at,
+        unread_count: 0
+      });
+    }
+
+    const row = grouped.get(msg.user_id);
+
+    if (!row.last_time || new Date(msg.created_at) > new Date(row.last_time)) {
+      row.last_message = msg.message || '';
+      row.last_time = msg.created_at;
+    }
+
+    if (!msg.is_read && msg.sender_role === 'user') {
+      row.unread_count += 1;
+    }
+  }
+
+  const threads = [...grouped.values()].sort((a, b) => new Date(b.last_time) - new Date(a.last_time));
+  const usersMap = await fetchUsersMap(threads.map(t => t.user_id));
+
+  return threads.map(t => ({
+    ...t,
+    profile: usersMap[t.user_id] || null
+  }));
+}
+
+function renderThreadList(items, selectedUserId) {
+  if (!items.length) {
+    return `<div class="empty-state">Hələ söhbət yoxdur.</div>`;
+  }
+
+  return items.map(item => `
+    <button class="chat-thread-item ${item.user_id === selectedUserId ? 'active' : ''} ${item.unread_count ? 'unread' : ''}" type="button" data-chat-user="${item.user_id}">
+      <div class="chat-list-avatar">
+        <img src="${avatarUrl(item.profile)}" alt="${escapeHtml(fullName(item.profile))}">
+      </div>
+
+      <div class="chat-thread-text">
+        <strong>${escapeHtml(fullName(item.profile))}</strong>
+        <p>${escapeHtml(item.last_message || 'Mesaj yoxdur')}</p>
+      </div>
+
+      <div class="chat-thread-badges">
+        <span class="small-text muted">${formatDateTime(item.last_time)}</span>
+        ${item.unread_count ? `<span class="unread-dot">${item.unread_count}</span>` : ''}
+      </div>
+    </button>
+  `).join('');
+}
+
+function renderMessageRows(messages, usersMap, currentUserId, canManageAny = false) {
+  if (!messages.length) {
+    return `<div class="empty-state">Hələ mesaj yoxdur.</div>`;
+  }
+
+  return messages.map(msg => {
+    const senderProfile = usersMap[msg.sender_id] || null;
+    const mine = msg.sender_id === currentUserId;
+    const canManage = canManageAny || mine;
+    const roleText = msg.sender_role === 'admin' ? 'Admin' : 'İstifadəçi';
+
+    return `
+      <div class="message-row ${mine ? 'mine' : 'theirs'}">
+        <div class="message-bubble">
+          <div class="message-top">
+            <div class="message-avatar">
+              <img src="${avatarUrl(senderProfile)}" alt="${escapeHtml(fullName(senderProfile))}">
+            </div>
+            <div>
+              <div class="message-name">${escapeHtml(fullName(senderProfile))}</div>
+              <span class="message-role">${roleText}</span>
+            </div>
+          </div>
+
+          <div class="message-text">${escapeHtml(msg.message || '')}</div>
+
+          <div class="message-bottom">
+            <span class="message-time">${formatDateTime(msg.updated_at || msg.created_at)}${msg.updated_at && msg.updated_at !== msg.created_at ? ' • redaktə edildi' : ''}</span>
+            <div class="message-actions">
+              ${canManage ? `<button class="message-action-btn edit-message-btn" type="button" data-id="${msg.id}" data-text="${escapeHtml(msg.message || '')}">Redaktə</button>` : ''}
+              ${canManage ? `<button class="message-action-btn delete-message-btn" type="button" data-id="${msg.id}">Sil</button>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function markConversationRead(chatUserId, viewerRole) {
+  if (!chatUserId) return;
+
+  let query = supabaseClient
+    .from('messages')
+    .update({ is_read: true })
+    .eq('user_id', chatUserId)
+    .eq('is_read', false);
+
+  if (viewerRole === 'admin') {
+    query = query.eq('sender_role', 'user');
+  } else {
+    query = query.eq('sender_role', 'admin');
+  }
+
+  await query;
+}
+
+
+
+
 function createCard(item, favoriteIds = []) {
   const images = Array.isArray(item.images) && item.images.length ? item.images : ['foto/car-placeholder.jpg'];
   const isFav = favoriteIds.includes(item.id);
@@ -641,67 +816,216 @@ async function initFavorites() {
   refreshMessageBadge();
 }
 
-async function loadChatMessages(isAdmin, userId) {
-  let query = supabaseClient.from('messages').select('*').order('created_at', { ascending: true });
-  if (!isAdmin) query = query.eq('user_id', userId);
-  const { data } = await query;
-  return data || [];
-}
+
+
+
+
 
 async function initMessages() {
   const user = await requireAuth();
   if (!user) return;
+
   await ensureProfile(user);
   const profile = await getProfile(user.id);
   const isAdmin = profile?.role === 'admin';
-  const chatList = qs('#chatList');
-  const input = qs('#chatInput');
-  const sendBtn = qs('#sendChatBtn');
-  const countEl = qs('#chatUserCount');
 
-  async function render() {
-    const messages = await loadChatMessages(isAdmin, user.id);
-    if (countEl) countEl.textContent = messages.length;
-    chatList.innerHTML = messages.length ? messages.map(msg => `
-      <div class="msg ${msg.sender_role === 'admin' ? 'admin' : 'user'}">
-        <strong>${msg.sender_role === 'admin' ? 'Admin' : 'Siz'}</strong><br>${msg.message}
-      </div>
-    `).join('') : '<div class="empty-state">Hələ mesaj yoxdur.</div>';
-    chatList.scrollTop = chatList.scrollHeight;
+  const sidebarPanel = qs('#chatSidebarPanel');
+  const threadsEl = qs('#chatThreads');
+  const countEl = qs('#chatUserCount');
+  const titleEl = qs('#chatThreadTitle');
+  const metaEl = qs('#chatThreadMeta');
+  const avatarEl = qs('#chatThreadAvatar');
+  const messagesEl = qs('#chatMessages');
+  const inputEl = qs('#chatInput');
+  const sendBtn = qs('#sendChatBtn');
+  const editorBanner = qs('#chatEditorBanner');
+  const editorPreview = qs('#chatEditorPreview');
+  const cancelEditBtn = qs('#cancelEditBtn');
+
+  let selectedUserId = isAdmin ? null : user.id;
+  let editingMessageId = null;
+
+  if (!isAdmin && sidebarPanel) {
+    sidebarPanel.style.display = 'none';
+    if (countEl) countEl.textContent = '1';
+  }
+
+  async function renderThreads() {
+    if (!isAdmin || !threadsEl) return;
+
+    const threads = await fetchAdminThreads();
+    countEl.textContent = threads.length;
+
+    if (!selectedUserId && threads.length) {
+      selectedUserId = threads[0].user_id;
+    }
+
+    threadsEl.innerHTML = renderThreadList(threads, selectedUserId);
+
+    qsa('[data-chat-user]', threadsEl).forEach(btn => {
+      btn.addEventListener('click', async () => {
+        selectedUserId = btn.dataset.chatUser;
+        editingMessageId = null;
+        editorBanner?.classList.add('hidden');
+        await renderAll();
+      });
+    });
+  }
+
+  async function renderMessages() {
+    if (!selectedUserId) {
+      messagesEl.innerHTML = `<div class="empty-state">Söhbət seçin.</div>`;
+      titleEl.textContent = 'Dəstək söhbəti';
+      metaEl.textContent = 'Söhbət seçilməyib';
+      avatarEl.src = 'foto/user-placeholder.png';
+      return;
+    }
+
+    const messages = await fetchConversationMessages(selectedUserId);
+    const ids = [...new Set(messages.flatMap(m => [m.sender_id, m.receiver_id, m.user_id]))];
+    const usersMap = await fetchUsersMap(ids);
+    const targetProfile = usersMap[selectedUserId] || null;
+
+    titleEl.textContent = isAdmin ? fullName(targetProfile) : 'ELİT AVTO 777 dəstək';
+    metaEl.textContent = isAdmin
+      ? `${targetProfile?.email || ''}${targetProfile?.phone ? ' • ' + targetProfile.phone : ''}`
+      : 'Admin ilə yazışırsınız';
+    avatarEl.src = isAdmin ? avatarUrl(targetProfile) : (avatarUrl(usersMap[messages.find(x => x.sender_role === 'admin')?.sender_id]) || 'foto/user-placeholder.png');
+
+    messagesEl.innerHTML = renderMessageRows(messages, usersMap, user.id, isAdmin);
+
+    qsa('.edit-message-btn', messagesEl).forEach(btn => {
+      btn.addEventListener('click', () => {
+        editingMessageId = btn.dataset.id;
+        const text = btn.dataset.text || '';
+        inputEl.value = text.replaceAll('&#39;', "'").replaceAll('&quot;', '"');
+        editorPreview.textContent = inputEl.value;
+        editorBanner.classList.remove('hidden');
+        inputEl.focus();
+      });
+    });
+
+    qsa('.delete-message-btn', messagesEl).forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const { error } = await supabaseClient.from('messages').delete().eq('id', btn.dataset.id);
+        if (!error) {
+          if (editingMessageId === btn.dataset.id) {
+            editingMessageId = null;
+            editorBanner.classList.add('hidden');
+            inputEl.value = '';
+          }
+          await renderAll();
+        }
+      });
+    });
+
+    await markConversationRead(selectedUserId, isAdmin ? 'admin' : 'user');
+    messagesEl.scrollTop = messagesEl.scrollHeight;
     await refreshMessageBadge();
   }
 
-  sendBtn?.addEventListener('click', async () => {
-    const text = input.value.trim();
-    if (!text) return;
-    const payload = {
-      user_id: user.id,
-      sender_role: isAdmin ? 'admin' : 'user',
-      message: text,
-      is_read: false,
-    };
-    const { error } = await supabaseClient.from('messages').insert(payload);
-    if (!error) input.value = '';
+  async function renderAll() {
+    await renderThreads();
+    await renderMessages();
+  }
+
+  cancelEditBtn?.addEventListener('click', () => {
+    editingMessageId = null;
+    inputEl.value = '';
+    editorBanner.classList.add('hidden');
   });
 
-  input?.addEventListener('keydown', e => { if (e.key === 'Enter') sendBtn?.click(); });
-  await render();
-  supabaseClient.channel(`room-messages-${isAdmin ? 'admin' : user.id}`)
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, render)
+  async function submitMessage() {
+    const text = inputEl.value.trim();
+    if (!text || !selectedUserId) return;
+
+    if (editingMessageId) {
+      const { error } = await supabaseClient
+        .from('messages')
+        .update({ message: text, message_text: text })
+        .eq('id', editingMessageId);
+
+      if (!error) {
+        editingMessageId = null;
+        inputEl.value = '';
+        editorBanner.classList.add('hidden');
+        await renderAll();
+      }
+      return;
+    }
+
+    const payload = {
+      user_id: selectedUserId,
+      sender_role: isAdmin ? 'admin' : 'user',
+      message: text,
+      message_text: text,
+      is_read: false
+    };
+
+    const { error } = await supabaseClient.from('messages').insert(payload);
+    if (!error) {
+      inputEl.value = '';
+      await renderAll();
+    }
+  }
+
+  sendBtn?.addEventListener('click', submitMessage);
+  inputEl?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      submitMessage();
+    }
+  });
+
+  await renderAll();
+
+  if (liveMessageChannel) {
+    supabaseClient.removeChannel(liveMessageChannel);
+  }
+
+  liveMessageChannel = supabaseClient
+    .channel(`messages-page-${isAdmin ? 'admin' : user.id}`)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, async () => {
+      await renderAll();
+    })
     .subscribe();
 }
+
+
+
+
 
 async function refreshMessageBadge() {
   const el = qs('#bottomMsgCount');
   if (!el) return;
+
   const user = await getSessionUser();
-  if (!user) { el.textContent = '0'; return; }
+  if (!user) {
+    el.textContent = '0';
+    return;
+  }
+
   const profile = await getProfile(user.id);
-  let query = supabaseClient.from('messages').select('*', { count: 'exact', head: true }).eq('is_read', false);
-  if (profile?.role !== 'admin') query = query.eq('user_id', user.id).eq('sender_role', 'admin');
+
+  let query = supabaseClient
+    .from('messages')
+    .select('*', { count: 'exact', head: true })
+    .eq('is_read', false);
+
+  if (profile?.role === 'admin') {
+    query = query.eq('sender_role', 'user');
+  } else {
+    query = query.eq('user_id', user.id).eq('sender_role', 'admin');
+  }
+
   const { count } = await query;
   el.textContent = count ? String(count) : '0';
 }
+
+
+
+
+
 
 async function initAdmin() {
   const user = await requireAdmin();
@@ -790,69 +1114,174 @@ async function initAdmin() {
     }));
   }
 
-  async function loadMessages() {
-    const { data } = await supabaseClient.from('messages').select('*, users(name,surname,email)').order('created_at', { ascending: false }).limit(50);
-    messagesTable.innerHTML = (data || []).map(m => `
-      <tr>
-        <td>${m.users?.name || ''} ${m.users?.surname || ''}<br><span class="muted">${m.users?.email || ''} / ${m.sender_role}</span></td>
-        <td>${m.message}</td>
-        <td>${new Date(m.created_at).toLocaleString('az-AZ')}</td>
-      </tr>
-    `).join('');
-  }
 
-  qs('#listingForm')?.addEventListener('submit', async e => {
-    e.preventDefault();
-    try {
-      const id = qs('#listingId').value;
-      const files = [...(qs('#carImages').files || [])];
-      const imageUrls = [];
-      for (const file of files) {
-        const url = await uploadFile('elan-images', file, `${user.id}/${Date.now()}-${file.name}`);
-        imageUrls.push(url);
+
+
+
+
+  
+    async function loadMessages() {
+    const threadsEl = qs('#adminChatThreads');
+    const countEl = qs('#adminChatCount');
+    const titleEl = qs('#adminChatThreadTitle');
+    const metaEl = qs('#adminChatThreadMeta');
+    const avatarEl = qs('#adminChatThreadAvatar');
+    const messagesEl = qs('#adminChatMessages');
+    const inputEl = qs('#adminChatInput');
+    const sendBtn = qs('#adminSendChatBtn');
+    const editorBanner = qs('#adminChatEditorBanner');
+    const editorPreview = qs('#adminChatEditorPreview');
+    const cancelEditBtn = qs('#adminCancelEditBtn');
+
+    if (!threadsEl || !messagesEl) return;
+
+    let selectedUserId = null;
+    let editingMessageId = null;
+
+    async function renderThreads() {
+      const threads = await fetchAdminThreads();
+      countEl.textContent = threads.length;
+
+      if (!selectedUserId && threads.length) {
+        selectedUserId = threads[0].user_id;
       }
-      const payload = {
-        brand: qs('#carBrand').value.trim(),
-        model: qs('#carModel').value.trim(),
-        price: Number(qs('#carPrice').value),
-        currency: qs('#carCurrency').value,
-        year: Number(qs('#carYear').value),
-        mileage: Number(qs('#carMileage').value || 0),
-        engine: qs('#carEngine').value.trim(),
-        fuel_type: qs('#carFuel').value,
-        transmission: qs('#carTransmission').value.trim(),
-        color: qs('#carColor').value.trim(),
-        condition: qs('#carCondition').value,
-        body_type: qs('#carBodyType').value.trim(),
-        is_credit: qs('#carCredit').value === 'true',
-        is_barter: qs('#carBarter').value === 'true',
-        description: qs('#carDescription').value.trim(),
-        salon_note: qs('#carNote').value.trim(),
-        is_active: true,
-      };
-      if (id) {
-        if (imageUrls.length) payload.images = imageUrls;
-        const { error } = await supabaseClient.from('elanlar').update(payload).eq('id', id);
-        msg.textContent = error ? error.message : 'Elan yeniləndi.';
-      } else {
-        payload.images = imageUrls;
-        const { error } = await supabaseClient.from('elanlar').insert(payload);
-        msg.textContent = error ? error.message : 'Yeni elan əlavə edildi.';
-      }
-      qs('#clearListingForm').click();
-      await Promise.all([loadListings(), loadStats()]);
-    } catch (err) {
-      msg.textContent = err.message;
+
+      threadsEl.innerHTML = renderThreadList(threads, selectedUserId);
+
+      qsa('[data-chat-user]', threadsEl).forEach(btn => {
+        btn.addEventListener('click', async () => {
+          selectedUserId = btn.dataset.chatUser;
+          editingMessageId = null;
+          editorBanner.classList.add('hidden');
+          await renderMessages();
+          await renderThreads();
+        });
+      });
     }
-  });
 
-  qs('#clearListingForm')?.addEventListener('click', () => {
-    qs('#listingForm').reset();
-    qs('#listingId').value = '';
-  });
+    async function renderMessages() {
+      if (!selectedUserId) {
+        messagesEl.innerHTML = `<div class="empty-state">Hələ söhbət yoxdur.</div>`;
+        titleEl.textContent = 'İstifadəçi seçin';
+        metaEl.textContent = 'Mesaj görünəcək';
+        avatarEl.src = 'foto/user-placeholder.png';
+        return;
+      }
 
-  await Promise.all([loadStats(), loadListings(), loadUsers(), loadMessages()]);
+      const messages = await fetchConversationMessages(selectedUserId);
+      const ids = [...new Set(messages.flatMap(m => [m.sender_id, m.receiver_id, m.user_id]))];
+      const usersMap = await fetchUsersMap(ids);
+      const targetProfile = usersMap[selectedUserId] || null;
+
+      titleEl.textContent = fullName(targetProfile);
+      metaEl.textContent = `${targetProfile?.email || ''}${targetProfile?.phone ? ' • ' + targetProfile.phone : ''}`;
+      avatarEl.src = avatarUrl(targetProfile);
+
+      messagesEl.innerHTML = renderMessageRows(messages, usersMap, user.id, true);
+
+      qsa('.edit-message-btn', messagesEl).forEach(btn => {
+        btn.addEventListener('click', () => {
+          editingMessageId = btn.dataset.id;
+          const text = btn.dataset.text || '';
+          inputEl.value = text.replaceAll('&#39;', "'").replaceAll('&quot;', '"');
+          editorPreview.textContent = inputEl.value;
+          editorBanner.classList.remove('hidden');
+          inputEl.focus();
+        });
+      });
+
+      qsa('.delete-message-btn', messagesEl).forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const { error } = await supabaseClient.from('messages').delete().eq('id', btn.dataset.id);
+          if (!error) {
+            if (editingMessageId === btn.dataset.id) {
+              editingMessageId = null;
+              editorBanner.classList.add('hidden');
+              inputEl.value = '';
+            }
+            await renderThreads();
+            await renderMessages();
+          }
+        });
+      });
+
+      await markConversationRead(selectedUserId, 'admin');
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      await refreshMessageBadge();
+    }
+
+    cancelEditBtn?.addEventListener('click', () => {
+      editingMessageId = null;
+      inputEl.value = '';
+      editorBanner.classList.add('hidden');
+    });
+
+    async function submitAdminReply() {
+      const text = inputEl.value.trim();
+      if (!text || !selectedUserId) return;
+
+      if (editingMessageId) {
+        const { error } = await supabaseClient
+          .from('messages')
+          .update({ message: text, message_text: text })
+          .eq('id', editingMessageId);
+
+        if (!error) {
+          editingMessageId = null;
+          editorBanner.classList.add('hidden');
+          inputEl.value = '';
+          await renderThreads();
+          await renderMessages();
+        }
+        return;
+      }
+
+      const payload = {
+        user_id: selectedUserId,
+        sender_role: 'admin',
+        message: text,
+        message_text: text,
+        is_read: false
+      };
+
+      const { error } = await supabaseClient.from('messages').insert(payload);
+      if (!error) {
+        inputEl.value = '';
+        await renderThreads();
+        await renderMessages();
+      }
+    }
+
+    sendBtn?.addEventListener('click', submitAdminReply);
+    inputEl?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        submitAdminReply();
+      }
+    });
+
+    await renderThreads();
+    await renderMessages();
+
+    if (liveAdminChannel) {
+      supabaseClient.removeChannel(liveAdminChannel);
+    }
+
+    liveAdminChannel = supabaseClient
+      .channel('admin-support-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, async () => {
+        await renderThreads();
+        await renderMessages();
+        await loadStats();
+      })
+      .subscribe();
+  }
+  
+    await Promise.all([loadStats(), loadListings(), loadUsers()]);
+  await loadMessages();
 }
+
+
 
 
 
