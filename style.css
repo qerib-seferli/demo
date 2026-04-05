@@ -2016,19 +2016,22 @@ select option { color: #111; }
 }
 
 
+
+
+
 .advanced-filter-grid-pro {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0,1fr));        /* Kompüterdə 4 sütun olsun */
+  grid-template-columns: repeat(4, minmax(0,1fr));   /* Kompüterdə 4 sütun */
   gap: 12px;
 }
 
 .advanced-filter-grid-pro .full-span {
-  grid-column: 1 / -1;
+  grid-column: 1 / -1;   /* Tam en tutan hissələr */
 }
 
 .filter-equipment-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0,1fr));      /* Təchizat hissəsini də komputerdə 5 sütun etmək */
+  grid-template-columns: repeat(5, minmax(0,1fr));   /* Təchizat hissəsi kompüterdə 5 sütun */
   gap: 10px;
 }
 
@@ -2062,23 +2065,35 @@ select option { color: #111; }
   background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)) !important;
 }
 
+.field-inline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));   /* Qiymət min/max, İl min/max və s. yan-yana */
+  gap: 8px;
+  align-items: end;
+}
+
+.field-inline > div {
+  min-width: 0;
+  width: 100%;
+}
+
+/* Tablet görünüşü */
 @media (max-width: 980px) {
   .advanced-filter-grid-pro {
-    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0,1fr));   /* Tablet və orta ekranlarda 2 sütun */
   }
 
   .filter-equipment-grid {
-    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-template-columns: repeat(3, minmax(0,1fr));   /* Tablet üçün təchizat 3 sütun */
   }
 }
 
-
+/* Telefon görünüşü */
 @media (max-width: 768px) {
   .advanced-filter-grid-pro {
-    grid-template-columns: repeat(4, minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0,1fr));   /* Telefonda 2 sütun */
     gap: 8px;
   }
-}
 
   .advanced-filter-grid-pro .field,
   .advanced-filter-grid-pro .field-inline {
@@ -2098,8 +2113,18 @@ select option { color: #111; }
     border-radius: 12px;
   }
 
+  .field-inline {
+    grid-template-columns: repeat(2, minmax(0,1fr));   /* Telefonda da min/max sahələr yan-yana */
+    gap: 6px;
+  }
+
+  .field-inline > div {
+    min-width: 0;
+    width: 100%;
+  }
+
   .filter-equipment-grid {
-    grid-template-columns: repeat(2, minmax(0,1fr));        /* Təchizat hissəsini də telefonda 2 sütun etmək */
+    grid-template-columns: repeat(2, minmax(0,1fr));   /* Təchizat hissəsi telefonda 2 sütun */
     gap: 8px;
   }
 
@@ -2112,7 +2137,7 @@ select option { color: #111; }
 
   .circle-switches {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0,1fr));   /* Kredit/Barter/VIP və s. telefonda 2 sütun */
     gap: 8px;
   }
 
