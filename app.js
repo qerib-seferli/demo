@@ -284,6 +284,37 @@ function formatDateTime(dateStr) {
   });
 }
 
+
+function formatShortDate(dateStr) {
+  if (!dateStr) return '-';
+  return new Date(dateStr).toLocaleDateString('az-AZ', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+}
+
+function openUserDetailModal(user) {
+  qs('#userModalAvatar').src = user?.avatar_url || 'foto/user-placeholder.png';
+  qs('#userModalName').textContent = [user?.name, user?.surname].filter(Boolean).join(' ').trim() || user?.email || 'İstifadəçi';
+  qs('#userModalRole').textContent = user?.role === 'admin' ? 'Admin' : 'İstifadəçi';
+  qs('#userModalEmail').textContent = user?.email || '-';
+  qs('#userModalPhone').textContent = user?.phone || '-';
+  qs('#userModalAddress').textContent = user?.address || '-';
+  qs('#userModalBio').textContent = user?.bio || '-';
+  qs('#userModalCreatedAt').textContent = formatShortDate(user?.created_at);
+
+  qs('#userDetailModal')?.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeUserDetailModal() {
+  qs('#userDetailModal')?.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+
+
 async function fetchUsersMap(ids = []) {
   const uniqueIds = [...new Set(ids.filter(Boolean))];
   if (!uniqueIds.length) return {};
@@ -1260,8 +1291,13 @@ async function initAdmin() {
         <td>${fmt(item.price, item.currency)}</td>
         <td>${item.year || '-'}</td>
         <td>
-          <button class="btn btn-outline btn-small edit-listing" data-id="${item.id}" type="button">Redaktə</button>
-          <button class="btn btn-danger btn-small delete-listing" data-id="${item.id}" type="button">Sil</button>
+          <div class="filter-actions">
+            <a class="btn btn-outline btn-small" href="elan.html?id=${item.id}" target="_blank">
+            <i class="fa-regular fa-eye"></i> Ətraflı bax
+          </a>
+            <button class="btn btn-outline btn-small edit-listing-btn" data-id="${item.id}">Redaktə</button>
+            <button class="btn btn-danger btn-small delete-listing-btn" data-id="${item.id}">Sil</button>
+          </div>
         </td>
       </tr>
     `).join('');
@@ -1302,24 +1338,120 @@ async function initAdmin() {
     }));
   }
 
-  async function loadUsers() {
-    const { data } = await supabaseClient.from('users').select('*').order('created_at', { ascending: false });
-    usersTable.innerHTML = (data || []).map(u => `
-      <tr>
-        <td>${u.name || ''} ${u.surname || ''}</td>
-        <td>${u.phone || '-'}</td>
-        <td>${u.email || '-'}</td>
-        <td>${u.role || 'user'}</td>
-        <td><button class="btn btn-outline btn-small user-role" data-id="${u.id}" data-role="${u.role === 'admin' ? 'user' : 'admin'}" type="button">${u.role === 'admin' ? 'User et' : 'Admin et'}</button></td>
-      </tr>
-    `).join('');
+    async function loadUsers() {
+    const tbody = qs('#adminUsersTable');
+    const searchInput = qs('#adminUserSearch');
+    const showLast10Btn = qs('#showLast10Users');
+    const showAllBtn = qs('#showAllUsers');
+    const toggleBtn = qs('#toggleUsersSection');
+    const sectionBody = qs('#usersSectionBody');
 
-    qsa('.user-role').forEach(btn => btn.addEventListener('click', async () => {
-      await supabaseClient.from('users').update({ role: btn.dataset.role }).eq('id', btn.dataset.id);
-      await loadUsers();
-    }));
+    if (!tbody) return;
+
+    const { data } = await supabaseClient
+      .from('users')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    const allUsers = data || [];
+    let currentMode = 'last10';
+    let query = '';
+
+    function applyFilters(list) {
+      let filtered = [...list];
+
+      if (query.trim()) {
+        const q = query.trim().toLowerCase();
+        filtered = filtered.filter(user => {
+          const full = `${user.name || ''} ${user.surname || ''}`.toLowerCase();
+          return (
+            full.includes(q) ||
+            (user.phone || '').toLowerCase().includes(q) ||
+            (user.email || '').toLowerCase().includes(q)
+          );
+        });
+      }
+
+      if (currentMode === 'last10' && !query.trim()) {
+        filtered = filtered.slice(0, 10);
+      }
+
+      return filtered;
+    }
+
+
+      
+    function renderUsers() {
+      const filtered = applyFilters(allUsers);
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">İstifadəçi tapılmadı.</div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(user => `
+        <tr>
+          <td>
+            <div class="user-mini-profile">
+              <img src="${user.avatar_url || 'foto/user-placeholder.png'}" alt="${escapeHtml(fullName(user))}">
+            </div>
+          </td>
+
+          <td>
+            <div class="user-name-stack">
+              <strong>${escapeHtml(fullName(user))}</strong>
+              <span>${user.role === 'admin' ? 'Admin hesabı' : 'İstifadəçi hesabı'}</span>
+            </div>
+          </td>
+
+          <td>${user.phone || '-'}</td>
+          <td>${user.email || '-'}</td>
+          <td>${user.role === 'admin' ? 'Admin' : 'İstifadəçi'}</td>
+
+          <td>
+            <div class="user-actions">
+              <button class="btn btn-outline btn-small user-detail-btn" type="button" data-user-id="${user.id}">
+                <i class="fa-regular fa-id-card"></i> Ətraflı bax
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      qsa('.user-detail-btn', tbody).forEach(btn => {
+        btn.addEventListener('click', () => {
+          const user = allUsers.find(x => x.id === btn.dataset.userId);
+          if (user) openUserDetailModal(user);
+        });
+      });
+    }
+
+    searchInput?.addEventListener('input', (e) => {
+      query = e.target.value || '';
+      renderUsers();
+    });
+
+    showLast10Btn?.addEventListener('click', () => {
+      currentMode = 'last10';
+      renderUsers();
+    });
+
+    showAllBtn?.addEventListener('click', () => {
+      currentMode = 'all';
+      renderUsers();
+    });
+
+    toggleBtn?.addEventListener('click', () => {
+      sectionBody?.classList.toggle('collapsed');
+    });
+
+    qs('#closeUserDetailModal')?.addEventListener('click', closeUserDetailModal);
+    qs('#userDetailModal')?.addEventListener('click', (e) => {
+      if (e.target.id === 'userDetailModal') closeUserDetailModal();
+    });
+
+    renderUsers();
   }
-
 
 
 
