@@ -34,6 +34,66 @@ const BRAND_LOGOS = [
   ['Volkswagen', 'volkswagen_logo.png'],
 ];
 
+
+
+const ADMIN_BODY_TYPES = [
+  'Avtobus','Avtokran','Dartqı','Fastbek','Fayton','Furqon','Hetçbek (3 qapı)','Hetçbek (4 qapı)','Hetçbek (5 qapı)',
+  'Kabriolet','Karvan','Kompakt-Van','Kupe','Kvadrosikl','Liftbek','Limuzin','Mikroavtobus','Mikrovan','Minivan',
+  'Moped','Motosiklet','Offroader / SUV (3 qapı)','Offroader / SUV (5 qapı)','Offroader / SUV (açıq)',
+  'Pikap (bir yarım kabin)','Pikap (ikiqat kabin)','Pikap (tək kabin)','Qolfkar','Rodster','Sedan','Skuter',
+  'Spidster','SUV Kupe','Tarqa','Trisikl','Universal (3 qapı)','Universal (5 qapı)','Van','Yük maşını'
+];
+
+const ADMIN_DRIVETRAINS = ['Arxa', 'Ön', 'Tam'];
+
+const ADMIN_TRANSMISSIONS = [
+  'Avtomat (DHT)',
+  'Avtomat (AT)',
+  'Avtomat (Robot)',
+  'Avtomat (Reduktor)',
+  'Mexaniki (MT)',
+  'Avtomat (Variator)'
+];
+
+const ADMIN_FUELS = [
+  'Benzin', 'Dizel', 'Qaz', 'Elektro', 'Hibrid', 'Plug-in Hibrid', 'Hidrogen', 'Dizel-Hibrid'
+];
+
+const ADMIN_COLORS = [
+  { name: 'Qara', hex: '#000000' },
+  { name: 'Yaş Asfalt', hex: '#505050' },
+  { name: 'Boz', hex: '#808080' },
+  { name: 'Gümüşü', hex: '#c0c0c0' },
+  { name: 'Ağ', hex: '#ffffff' },
+  { name: 'Bej', hex: '#f5f5dc' },
+  { name: 'Tünd qırmızı', hex: '#9b2d30' },
+  { name: 'Qırmızı', hex: '#ff0000' },
+  { name: 'Çəhrayı', hex: '#ffc0cb' },
+  { name: 'Narıncı', hex: '#ffa500' },
+  { name: 'Qızılı', hex: '#ffd700' },
+  { name: 'Sarı', hex: '#ffff00' },
+  { name: 'Xaki', hex: '#4E5720' },
+  { name: 'Tünd yaşıl', hex: '#2D4936' },
+  { name: 'Yaşıl', hex: '#16D114' },
+  { name: 'Açıq yaşıl', hex: '#AFD3AF' },
+  { name: 'Mavi', hex: '#42aaff' },
+  { name: 'Göy', hex: '#0000ff' },
+  { name: 'Bənövşəyi', hex: '#8b00ff' },
+  { name: 'Qəhvəyi', hex: '#964b00' }
+];
+
+const ADMIN_EQUIPMENT = [
+  'Yüngül lehimli disklər', 'ABS', 'Lyuk', 'Yağış sensoru', 'Mərkəzi qapanma', 'Park radarı', 'Kondisioner',
+  'Oturacaqların isidilməsi', 'Dəri salon', 'Ksenon lampalar', '360º kamera', 'Arxa görüntü kamerası',
+  'Yan pərdələr', 'Oturacaqların ventilyasiyası', 'Hava yastıqları', 'Kruiz-kontrol', 'Klimat-kontrol',
+  'Naviqasiya sistemi', 'Monitor (Multimediya)', 'Multi-sükan', 'İşıq sensoru', 'Ölü zona köməkçisi',
+  'Zolaqda qalma yardımı', 'Simsiz şarj', 'Apple CarPlay / Android Auto', 'Start-stop sistemi',
+  'Açarsız giriş', 'Baqajın avtomatik açılması', 'Güzgülərin qatlanması', 'Yoxuşda dəstək sistemi'
+];
+
+
+
+
 function getPage() {
   return document.body?.dataset?.page || 'home';
 }
@@ -155,6 +215,124 @@ function escapeHtml(value = '') {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
 }
+
+
+
+
+function fillSelectOptions(selectEl, items, withEmpty = false) {
+  if (!selectEl) return;
+  const start = withEmpty ? `<option value="">Seçin</option>` : '';
+  selectEl.innerHTML = start + items.map(item => `<option value="${item}">${item}</option>`).join('');
+}
+
+function fillColorOptions(selectEl) {
+  if (!selectEl) return;
+  selectEl.innerHTML = ADMIN_COLORS.map(c => `<option value="${c.name}" data-hex="${c.hex}">${c.name}</option>`).join('');
+}
+
+function renderEquipmentOptions(container, selected = []) {
+  if (!container) return;
+  container.innerHTML = ADMIN_EQUIPMENT.map(item => `
+    <label class="equipment-chip">
+      <input type="checkbox" value="${item}" ${selected.includes(item) ? 'checked' : ''}>
+      <span class="dot-radio"></span>
+      <span>${item}</span>
+    </label>
+  `).join('');
+}
+
+function getSelectedEquipment() {
+  return qsa('#carEquipment input:checked').map(x => x.value);
+}
+
+function getColorHexByName(name) {
+  return ADMIN_COLORS.find(c => c.name === name)?.hex || '';
+}
+
+function populateAdminListingFormOptions() {
+  fillSelectOptions(qs('#carFuel'), ADMIN_FUELS);
+  fillSelectOptions(qs('#carDrivetrain'), ADMIN_DRIVETRAINS, true);
+  fillSelectOptions(qs('#carTransmission'), ADMIN_TRANSMISSIONS, true);
+  fillSelectOptions(qs('#carBodyType'), ADMIN_BODY_TYPES, true);
+  fillColorOptions(qs('#carColor'));
+  renderEquipmentOptions(qs('#carEquipment'));
+}
+
+function clearAdminListingForm() {
+  qs('#listingId').value = '';
+  qs('#listingForm')?.reset();
+  populateAdminListingFormOptions();
+  qs('#carCondition').value = 'Sürülmüş';
+  qs('#carCurrency').value = 'AZN';
+  qs('#carCredit').value = 'false';
+  qs('#carBarter').value = 'false';
+  qs('#carDamage').value = 'false';
+  qs('#carPainted').value = 'false';
+  qs('#carVip').value = 'false';
+}
+
+function fillAdminListingForm(item) {
+  qs('#listingId').value = item.id || '';
+  qs('#carBrand').value = item.brand || '';
+  qs('#carModel').value = item.model || '';
+  qs('#carPrice').value = item.price || '';
+  qs('#carCurrency').value = item.currency || 'AZN';
+  qs('#carYear').value = item.year || '';
+  qs('#carMileage').value = item.mileage || '';
+  qs('#carEngine').value = item.engine || '';
+  qs('#carFuel').value = item.fuel_type || '';
+  qs('#carDrivetrain').value = item.drivetrain || '';
+  qs('#carTransmission').value = item.transmission || '';
+  qs('#carColor').value = item.color || '';
+  qs('#carCondition').value = item.condition || 'Sürülmüş';
+  qs('#carBodyType').value = item.body_type || '';
+  qs('#carCredit').value = String(!!item.is_credit);
+  qs('#carBarter').value = String(!!item.is_barter);
+  qs('#carDamage').value = String(!!item.has_damage);
+  qs('#carPainted').value = String(!!item.is_painted);
+  qs('#carVip').value = String(!!item.is_vip);
+  qs('#carSeats').value = item.seats_count || '';
+  qs('#carNote').value = item.salon_note || '';
+  qs('#carDescription').value = item.description || '';
+  renderEquipmentOptions(qs('#carEquipment'), Array.isArray(item.equipment) ? item.equipment : []);
+}
+
+function collectAdminListingPayload(existingImages = []) {
+  const colorName = qs('#carColor').value || '';
+  return {
+    brand: qs('#carBrand').value.trim(),
+    model: qs('#carModel').value.trim(),
+    title: `${qs('#carBrand').value.trim()} ${qs('#carModel').value.trim()}`.trim(),
+    price: Number(qs('#carPrice').value || 0),
+    currency: qs('#carCurrency').value || 'AZN',
+    year: Number(qs('#carYear').value || 0),
+    mileage: Number(qs('#carMileage').value || 0),
+    engine: qs('#carEngine').value.trim(),
+    fuel_type: qs('#carFuel').value || '',
+    drivetrain: qs('#carDrivetrain').value || '',
+    transmission: qs('#carTransmission').value || '',
+    color: colorName,
+    color_name: colorName,
+    color_hex: getColorHexByName(colorName),
+    condition: qs('#carCondition').value || 'Sürülmüş',
+    body_type: qs('#carBodyType').value || '',
+    is_credit: qs('#carCredit').value === 'true',
+    is_barter: qs('#carBarter').value === 'true',
+    has_credit: qs('#carCredit').value === 'true',
+    has_barter: qs('#carBarter').value === 'true',
+    has_damage: qs('#carDamage').value === 'true',
+    is_painted: qs('#carPainted').value === 'true',
+    is_vip: qs('#carVip').value === 'true',
+    seats_count: Number(qs('#carSeats').value || 0) || null,
+    salon_note: qs('#carNote').value.trim(),
+    special_note: qs('#carNote').value.trim(),
+    description: qs('#carDescription').value.trim(),
+    equipment: getSelectedEquipment(),
+    images: existingImages
+  };
+}
+
+
 
 function fullName(profile) {
   return [profile?.name, profile?.surname].filter(Boolean).join(' ').trim() || profile?.email || 'İstifadəçi';
@@ -1272,72 +1450,99 @@ async function initAdmin() {
   const usersTable = qs('#adminUsersTable');
   const messagesTable = qs('#adminMessagesTable');
 
-  async function loadStats() {
-    const [{ count: c1 }, { count: c2 }, { count: c3 }] = await Promise.all([
+
+  
+    async function loadStats() {
+    const [{ count: listingCount }, { count: userCount }, { count: totalMsgCount }, { count: unreadUserMsgCount }] = await Promise.all([
       supabaseClient.from('elanlar').select('*', { count: 'exact', head: true }),
       supabaseClient.from('users').select('*', { count: 'exact', head: true }),
       supabaseClient.from('messages').select('*', { count: 'exact', head: true }),
+      supabaseClient.from('messages').select('*', { count: 'exact', head: true }).eq('sender_role', 'user').eq('is_read', false)
     ]);
-    qs('#adminTotalListings').textContent = c1 || 0;
-    qs('#adminTotalUsers').textContent = c2 || 0;
-    qs('#adminTotalMessages').textContent = c3 || 0;
+
+    if (qs('#adminTotalListings')) qs('#adminTotalListings').textContent = listingCount || 0;
+    if (qs('#adminTotalUsers')) qs('#adminTotalUsers').textContent = userCount || 0;
+    if (qs('#adminTotalMessages')) qs('#adminTotalMessages').textContent = unreadUserMsgCount || 0;
+
+    const kpiBtn = qs('#adminMessageKpi');
+    if (kpiBtn) {
+      kpiBtn.classList.toggle('has-new', (unreadUserMsgCount || 0) > 0);
+    }
   }
 
-  async function loadListings() {
-    const { data } = await supabaseClient.from('elanlar').select('*').order('created_at', { ascending: false });
-    listingTable.innerHTML = (data || []).map(item => `
+
+  
+  
+    async function loadListings() {
+    const tbody = qs('#adminListingTable');
+    if (!tbody) return;
+
+    const { data } = await supabaseClient
+      .from('elanlar')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    const items = data || [];
+
+    if (!items.length) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state">Hələ elan yoxdur.</div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = items.map(item => `
       <tr>
-        <td>${item.brand} ${item.model}</td>
+        <td>
+          <div class="user-name-stack">
+            <strong>${escapeHtml(item.brand || '')} ${escapeHtml(item.model || '')}</strong>
+            <span>${item.is_vip ? `<span class="vip-badge"><i class="fa-solid fa-crown"></i> VIP</span>` : (item.body_type || '-')}</span>
+          </div>
+        </td>
         <td>${fmt(item.price, item.currency)}</td>
         <td>${item.year || '-'}</td>
         <td>
-          <div class="filter-actions">
+          <div class="admin-action-stack">
             <a class="btn btn-outline btn-small" href="elan.html?id=${item.id}" target="_blank">
-            <i class="fa-regular fa-eye"></i> Ətraflı bax
-          </a>
-            <button class="btn btn-outline btn-small edit-listing-btn" data-id="${item.id}">Redaktə</button>
-            <button class="btn btn-danger btn-small delete-listing-btn" data-id="${item.id}">Sil</button>
+              <i class="fa-regular fa-eye"></i> Ətraflı bax
+            </a>
+            <button class="btn btn-outline btn-small edit-listing-btn" type="button" data-id="${item.id}">
+              Redaktə
+            </button>
+            <button class="btn btn-danger btn-small delete-listing-btn" type="button" data-id="${item.id}">
+              Sil
+            </button>
           </div>
         </td>
       </tr>
     `).join('');
 
-    qsa('.edit-listing').forEach(btn => btn.addEventListener('click', async () => {
-      const { data } = await supabaseClient.from('elanlar').select('*').eq('id', btn.dataset.id).maybeSingle();
-      if (!data) return;
-      qs('#listingId').value = data.id;
-      qs('#carBrand').value = data.brand || '';
-      qs('#carModel').value = data.model || '';
-      qs('#carPrice').value = data.price || '';
-      qs('#carCurrency').value = data.currency || 'AZN';
-      qs('#carYear').value = data.year || '';
-      qs('#carMileage').value = data.mileage || '';
-      qs('#carEngine').value = data.engine || '';
-      qs('#carFuel').value = data.fuel_type || 'Benzin';
-      qs('#carTransmission').value = data.transmission || '';
-      qs('#carColor').value = data.color || '';
-      qs('#carCondition').value = data.condition || 'Sürülmüş';
-      qs('#carBodyType').value = data.body_type || '';
-      qs('#carCredit').value = String(data.is_credit);
-      qs('#carBarter').value = String(data.is_barter);
-      qs('#carDescription').value = data.description || '';
-      qs('#carNote').value = data.salon_note || '';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }));
+    tbody.onclick = async (e) => {
+      const editBtn = e.target.closest('.edit-listing-btn');
+      const deleteBtn = e.target.closest('.delete-listing-btn');
 
-    qsa('.delete-listing').forEach(btn => btn.addEventListener('click', async () => {
-      if (!confirm('Bu elan silinsin?')) return;
-      const id = btn.dataset.id;
-      const { data } = await supabaseClient.from('elanlar').select('images').eq('id', id).maybeSingle();
-      if (data?.images?.length) {
-        const paths = data.images.filter(x => x.includes('/object/public/')).map(url => url.split('/object/public/elan-images/')[1]).filter(Boolean);
-        if (paths.length) await supabaseClient.storage.from('elan-images').remove(paths);
+      if (editBtn) {
+        const item = items.find(x => x.id === editBtn.dataset.id);
+        if (!item) return;
+        populateAdminListingFormOptions();
+        fillAdminListingForm(item);
+        qs('#adminMsg').textContent = 'Elan redaktə rejiminə gətirildi.';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-      await supabaseClient.from('elanlar').delete().eq('id', id);
-      await Promise.all([loadListings(), loadStats()]);
-    }));
+
+      if (deleteBtn) {
+        const id = deleteBtn.dataset.id;
+        const { error } = await supabaseClient.from('elanlar').delete().eq('id', id);
+        qs('#adminMsg').textContent = error ? `Xəta: ${error.message}` : 'Elan silindi.';
+        if (!error) {
+          clearAdminListingForm();
+          await loadListings();
+          await loadStats();
+        }
+      }
+    };
   }
 
+
+  
     async function loadUsers() {
     const tbody = qs('#adminUsersTable');
     const searchInput = qs('#adminUserSearch');
