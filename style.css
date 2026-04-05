@@ -2018,7 +2018,7 @@ select option { color: #111; }
 
 .advanced-filter-grid-pro {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
+  grid-template-columns: repeat(4, minmax(0,1fr));        /* Kompüterdə 4 sütun olsun */
   gap: 12px;
 }
 
@@ -2074,7 +2074,7 @@ select option { color: #111; }
 
 @media (max-width: 768px) {
   .advanced-filter-grid-pro {
-    grid-template-columns: repeat(3, minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0,1fr));          /* Telefonda 2 sütun olsun */
     gap: 8px;
   }
 
@@ -2097,7 +2097,7 @@ select option { color: #111; }
   }
 
   .filter-equipment-grid {
-    grid-template-columns: repeat(3, minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0,1fr));        /* Təchizat hissəsini də telefonda 2 sütun etmək */
     gap: 8px;
   }
 
