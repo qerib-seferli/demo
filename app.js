@@ -830,10 +830,24 @@ async function initProfile() {
     }
   });
 
-  qs('#resetPasswordBtn')?.addEventListener('click', async () => {
-    if (!user.email) return;
-    const { error } = await supabaseClient.auth.resetPasswordForEmail(user.email, { redirectTo: `${location.origin}/login.html` });
-    qs('#profileMsg').textContent = error ? error.message : 'Şifrə yeniləmə linki emailinizə göndərildi.';
+    qs('#resetPasswordBtn')?.addEventListener('click', async () => {
+    const email = qs('#profileEmail')?.value?.trim();
+    const msgEl = qs('#profileMsg');
+
+    if (!email) {
+      if (msgEl) msgEl.textContent = 'Email tapılmadı.';
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://qerib-seferli.github.io/elit-avto-777/reset-password.html'
+    });
+
+    if (msgEl) {
+      msgEl.textContent = error
+        ? `Xəta: ${error.message}`
+        : 'Şifrə yeniləmə linki email ünvanınıza göndərildi.';
+    }
   });
 
   qs('#logoutBtn')?.addEventListener('click', async () => {
@@ -843,6 +857,66 @@ async function initProfile() {
 
   refreshMessageBadge();
 }
+
+
+
+async function initResetPassword() {
+  const form = qs('#resetPasswordForm');
+  const msgEl = qs('#resetPasswordMsg');
+  if (!form) return;
+
+  try {
+    const hash = window.location.hash || '';
+    const search = new URLSearchParams(window.location.search);
+
+    if (hash.includes('access_token') || search.get('code')) {
+      if (search.get('code')) {
+        await supabaseClient.auth.exchangeCodeForSession(window.location.href);
+      }
+    }
+  } catch (e) {
+    console.warn('Reset session qurulmadı:', e);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const newPassword = qs('#newPassword')?.value?.trim();
+    const confirmNewPassword = qs('#confirmNewPassword')?.value?.trim();
+
+    if (!newPassword || !confirmNewPassword) {
+      msgEl.textContent = 'Bütün sahələri doldurun.';
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      msgEl.textContent = 'Şifrə ən azı 6 simvol olmalıdır.';
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      msgEl.textContent = 'Şifrələr eyni deyil.';
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.updateUser({
+      password: newPassword
+    });
+
+    if (error) {
+      msgEl.textContent = `Xəta: ${error.message}`;
+      return;
+    }
+
+    msgEl.textContent = 'Şifrəniz uğurla yeniləndi. İndi yeni şifrə ilə daxil ola bilərsiniz.';
+
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1800);
+  });
+}
+
+
 
 
 
@@ -1457,6 +1531,7 @@ async function init() {
   if (page === 'favorites') await initFavorites();
   if (page === 'messages') await initMessages();
   if (page === 'admin') await initAdmin();
+  if (page === 'reset-password') await initResetPassword();
 
   setupPresenceTracking();
   await setupGlobalMessageNotifications();
