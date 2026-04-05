@@ -1978,6 +1978,43 @@ select option { color: #111; }
 }
 
 
+.detail-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.detail-interest-btn {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 0 12px rgba(255,255,255,.05);
+}
+
+.detail-interest-btn:hover {
+  border-color: rgba(227,10,23,.35);
+  box-shadow: 0 0 14px rgba(227,10,23,.12);
+}
+
+@media (max-width: 768px) {
+  .detail-spec-grid-pro {
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+  }
+
+  .detail-top-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .detail-top-actions .btn {
+    width: 100%;
+    min-width: 0;
+    padding: 0 10px;
+  }
+}
+
 
 
 
