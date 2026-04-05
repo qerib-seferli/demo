@@ -19,42 +19,58 @@
     </div>
   </header>
 
+  
   <main class="page">
-    <div class="container profile-grid mobile-profile-grid">
-      <section class="sidebar-card profile-photo-card">
-        <h3>Profil şəkli</h3>
-        <div class="main-photo profile-avatar-box">
-          <img id="avatarPreview" src="foto/user-placeholder.png" alt="Profil şəkli">
-        </div>
-        <div class="field" style="margin-top:12px;">
-          <label>Qalereyadan şəkil seç</label>
-          <input type="file" id="avatarInput" accept="image/*">
-        </div>
-      </section>
+  <div class="container profile-page-shell">
+    <section class="form-card profile-main-card">
+      <div class="profile-hero-top">
+        <div class="profile-avatar-stage">
+          <div class="profile-avatar-ring ring-one"></div>
+          <div class="profile-avatar-ring ring-two"></div>
 
-      <section class="form-card">
+          <div class="profile-avatar-box profile-avatar-box-pro">
+            <img id="avatarPreview" src="foto/user-placeholder.png" alt="Profil şəkli">
+          </div>
+        </div>
+
+        <div class="profile-upload-inline">
+          <label for="avatarInput" class="btn btn-outline btn-small">
+            <i class="fa-regular fa-image"></i> Şəkil seç
+          </label>
+          <input type="file" id="avatarInput" accept="image/*" hidden>
+          <p class="muted small-text">Qalereyadan şəkil seçib profilə yükləyə bilərsiniz.</p>
+        </div>
+      </div>
+
+      <div class="profile-form-wrap">
         <h3>Profil məlumatları</h3>
+
         <form id="profileForm" class="compact-form-stack">
           <div class="field-inline mobile-single-inline">
             <div class="field"><label>Ad</label><input id="profileName" type="text"></div>
             <div class="field"><label>Soyad</label><input id="profileSurname" type="text"></div>
           </div>
+
           <div class="field-inline mobile-single-inline">
             <div class="field"><label>Email</label><input id="profileEmail" type="email" disabled></div>
             <div class="field"><label>Telefon</label><input id="profilePhone" type="tel" placeholder="+994501112233"></div>
           </div>
+
           <div class="field"><label>Ünvan</label><input id="profileAddress" type="text"></div>
           <div class="field"><label>Haqqında</label><textarea id="profileBio" placeholder="Qısa məlumat"></textarea></div>
+
           <div class="filter-actions profile-actions-stack">
             <button class="btn" type="submit">Yadda saxla</button>
             <button class="btn btn-outline" id="resetPasswordBtn" type="button">Şifrə yenilə</button>
           </div>
+
           <p class="muted">Şifrə açıq görünmür. Yeniləmə üçün email vasitəsilə sıfırlama linki göndərilir.</p>
           <p id="profileMsg" class="muted"></p>
         </form>
-      </section>
-    </div>
-  </main>
+      </div>
+    </section>
+  </div>
+</main>
 
   <nav class="bottom-nav">
     <div class="container nav-row">
