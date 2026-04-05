@@ -161,7 +161,7 @@ function fullName(profile) {
 }
 
 function avatarUrl(profile) {
-  return profile?.avatar_url || 'foto/user-placeholder.png';
+  return profile?.avatar_url || 'foto/elit_avto_777_logo.png';
 }
 
 function isUserOnline(profile) {
@@ -798,7 +798,7 @@ async function initProfile() {
   qs('#profilePhone').value = profile?.phone || '';
   qs('#profileAddress').value = profile?.address || '';
   qs('#profileBio').value = profile?.bio || '';
-  qs('#avatarPreview').src = profile?.avatar_url || 'foto/user-placeholder.png';
+  qs('#avatarPreview').src = profile?.avatar_url || 'foto/elit_avto_777_logo.png';
 
   qs('#avatarInput')?.addEventListener('change', e => {
     const file = e.target.files?.[0];
@@ -1006,7 +1006,7 @@ async function initMessages() {
       messagesEl.innerHTML = `<div class="empty-state">Söhbət seçin.</div>`;
       titleEl.textContent = 'Dəstək söhbəti';
       metaEl.textContent = 'Söhbət seçilməyib';
-      avatarEl.src = 'foto/user-placeholder.png';
+      avatarEl.src = 'foto/elit_avto_777_logo.png';
       return;
     }
 
@@ -1296,7 +1296,7 @@ async function initAdmin() {
         messagesEl.innerHTML = `<div class="empty-state">Hələ söhbət yoxdur.</div>`;
         titleEl.textContent = 'İstifadəçi seçin';
         metaEl.textContent = 'Mesaj görünəcək';
-        avatarEl.src = 'foto/user-placeholder.png';
+        avatarEl.src = 'foto/elit_avto_777_logo.png';
         return;
       }
 
