@@ -82,15 +82,51 @@
         </section>
       </div>
 
-      <section class="table-card" style="margin-top:14px;">
-        <div class="section-head"><h3>İstifadəçilər</h3><span class="badge">Şifrə görünmür</span></div>
-        <div class="table-wrap">
-          <table class="table">
-            <thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Email</th><th>Rol</th><th>Əməliyyat</th></tr></thead>
-            <tbody id="adminUsersTable"></tbody>
-          </table>
-        </div>
-      </section>
+      <section class="table-card users-section-card" style="margin-top:14px;">
+  <div class="section-head users-section-head">
+    <div>
+      <h3>İstifadəçilər</h3>
+      <p class="muted small-text">Son 10 istifadəçi görünür. Axtarışla daha çox baxa bilərsiniz.</p>
+    </div>
+
+    <div class="users-head-actions">
+      <span class="badge">Şifrə görünmür</span>
+      <button class="btn btn-outline btn-small" id="toggleUsersSection" type="button">
+        <i class="fa-solid fa-chevron-down"></i> Aç / Bağla
+      </button>
+    </div>
+  </div>
+
+  <div id="usersSectionBody" class="users-section-body">
+    <div class="users-toolbar">
+      <div class="field users-search-field">
+        <label>İstifadəçi axtar</label>
+        <input id="adminUserSearch" type="text" placeholder="Ad, soyad, telefon və ya email ilə axtar">
+      </div>
+
+      <div class="users-toolbar-actions">
+        <button class="btn btn-outline btn-small" id="showLast10Users" type="button">Son 10</button>
+        <button class="btn btn-outline btn-small" id="showAllUsers" type="button">Hamısı</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table admin-users-table">
+        <thead>
+          <tr>
+            <th>Profil</th>
+            <th>Ad Soyad</th>
+            <th>Telefon</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Əməliyyat</th>
+          </tr>
+        </thead>
+        <tbody id="adminUsersTable"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
 
       <section class="table-card" style="margin-top:14px;">
   <div class="section-head">
@@ -143,6 +179,55 @@
   </div>
 </section>
     </div>
+
+
+
+    <div class="user-modal-overlay hidden" id="userDetailModal">
+  <div class="user-modal-card">
+    <button class="user-modal-close" id="closeUserDetailModal" type="button">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="user-modal-glow glow-red"></div>
+    <div class="user-modal-glow glow-yellow"></div>
+
+    <div class="user-modal-head">
+      <div class="user-modal-avatar">
+        <img id="userModalAvatar" src="foto/user-placeholder.png" alt="Profil şəkli">
+      </div>
+
+      <div class="user-modal-titlebox">
+        <h3 id="userModalName">İstifadəçi</h3>
+        <p id="userModalRole" class="muted">Rol</p>
+      </div>
+    </div>
+
+    <div class="user-modal-grid">
+      <div class="user-modal-item">
+        <span>Email</span>
+        <strong id="userModalEmail">-</strong>
+      </div>
+      <div class="user-modal-item">
+        <span>Telefon</span>
+        <strong id="userModalPhone">-</strong>
+      </div>
+      <div class="user-modal-item">
+        <span>Ünvan</span>
+        <strong id="userModalAddress">-</strong>
+      </div>
+      <div class="user-modal-item">
+        <span>Qeydiyyat tarixi</span>
+        <strong id="userModalCreatedAt">-</strong>
+      </div>
+      <div class="user-modal-item full">
+        <span>Haqqında</span>
+        <strong id="userModalBio">-</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
