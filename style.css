@@ -2028,7 +2028,7 @@ select option { color: #111; }
 
 .filter-equipment-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0,1fr));      /* Təchizat hissəsini də komputerdə 4 sütun etmək */
+  grid-template-columns: repeat(5, minmax(0,1fr));      /* Təchizat hissəsini də komputerdə 5 sütun etmək */
   gap: 10px;
 }
 
