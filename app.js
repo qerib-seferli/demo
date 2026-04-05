@@ -166,9 +166,10 @@ function avatarUrl(profile) {
 
 function isUserOnline(profile) {
   if (!profile) return false;
-  if (profile.is_online === true) return true;
   if (!profile.last_seen_at) return false;
-  return (Date.now() - new Date(profile.last_seen_at).getTime()) < 45000;
+
+  const diff = Date.now() - new Date(profile.last_seen_at).getTime();
+  return diff < 45000;
 }
 
 function avatarStatusDot(profile) {
@@ -199,16 +200,21 @@ function setupPresenceTracking() {
   pingPresence();
   setInterval(pingPresence, 20000);
 
-  window.addEventListener('beforeunload', async () => {
+    window.addEventListener('beforeunload', async () => {
     const user = await getSessionUser();
     if (!user) return;
-    supabaseClient
-      .from('users')
-      .update({
-        is_online: false,
-        last_seen_at: new Date().toISOString()
-      })
-      .eq('id', user.id);
+
+    try {
+      await supabaseClient
+        .from('users')
+        .update({
+          is_online: false,
+          last_seen_at: new Date(Date.now() - 60000).toISOString()
+        })
+        .eq('id', user.id);
+    } catch (e) {
+      console.warn('Offline status yazılmadı:', e);
+    }
   });
 }
 
