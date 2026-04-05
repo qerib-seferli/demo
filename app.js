@@ -164,6 +164,109 @@ function avatarUrl(profile) {
   return profile?.avatar_url || 'foto/user-placeholder.png';
 }
 
+function isUserOnline(profile) {
+  if (!profile) return false;
+  if (profile.is_online === true) return true;
+  if (!profile.last_seen_at) return false;
+  return (Date.now() - new Date(profile.last_seen_at).getTime()) < 45000;
+}
+
+function avatarStatusDot(profile) {
+  return `<span class="avatar-status-dot ${isUserOnline(profile) ? 'online' : 'offline'}"></span>`;
+}
+
+function shouldShowEdited(msg) {
+  if (!msg?.updated_at || !msg?.created_at) return false;
+  const created = new Date(msg.created_at).getTime();
+  const updated = new Date(msg.updated_at).getTime();
+  return updated - created > 5000;
+}
+
+async function pingPresence() {
+  const user = await getSessionUser();
+  if (!user) return;
+
+  await supabaseClient
+    .from('users')
+    .update({
+      is_online: true,
+      last_seen_at: new Date().toISOString()
+    })
+    .eq('id', user.id);
+}
+
+function setupPresenceTracking() {
+  pingPresence();
+  setInterval(pingPresence, 20000);
+
+  window.addEventListener('beforeunload', async () => {
+    const user = await getSessionUser();
+    if (!user) return;
+    supabaseClient
+      .from('users')
+      .update({
+        is_online: false,
+        last_seen_at: new Date().toISOString()
+      })
+      .eq('id', user.id);
+  });
+}
+
+function playMessageSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+
+    o.type = 'sine';
+    o.frequency.setValueAtTime(880, ctx.currentTime);
+    g.gain.setValueAtTime(0.001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime + 0.24);
+  } catch (e) {
+    console.warn('Səs çalınmadı:', e);
+  }
+}
+
+let globalMessageSoundChannel = null;
+let lastSeenIncomingMessageId = null;
+
+async function setupGlobalMessageNotifications() {
+  const user = await getSessionUser();
+  if (!user) return;
+
+  const profile = await getProfile(user.id);
+  const isAdmin = profile?.role === 'admin';
+
+  if (globalMessageSoundChannel) {
+    supabaseClient.removeChannel(globalMessageSoundChannel);
+  }
+
+  globalMessageSoundChannel = supabaseClient
+    .channel(`global-message-sound-${user.id}`)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, async (payload) => {
+      const msg = payload.new;
+      if (!msg) return;
+
+      const incomingForMe = isAdmin
+        ? msg.sender_role === 'user'
+        : msg.user_id === user.id && msg.sender_role === 'admin';
+
+      if (!incomingForMe) return;
+      if (lastSeenIncomingMessageId === msg.id) return;
+
+      lastSeenIncomingMessageId = msg.id;
+      playMessageSound();
+      await refreshMessageBadge();
+    })
+    .subscribe();
+}
+
 function formatDateTime(dateStr) {
   if (!dateStr) return '-';
   return new Date(dateStr).toLocaleString('az-AZ', {
@@ -242,6 +345,7 @@ function renderThreadList(items, selectedUserId) {
     <button class="chat-thread-item ${item.user_id === selectedUserId ? 'active' : ''} ${item.unread_count ? 'unread' : ''}" type="button" data-chat-user="${item.user_id}">
       <div class="chat-list-avatar">
         <img src="${avatarUrl(item.profile)}" alt="${escapeHtml(fullName(item.profile))}">
+        ${avatarStatusDot(item.profile)}
       </div>
 
       <div class="chat-thread-text">
@@ -262,11 +366,19 @@ function renderMessageRows(messages, usersMap, currentUserId, canManageAny = fal
     return `<div class="empty-state">Hələ mesaj yoxdur.</div>`;
   }
 
+  const adminProfile = Object.values(usersMap).find(x => x?.role === 'admin') || null;
+  const targetUserProfile = Object.values(usersMap).find(x => x?.role !== 'admin') || null;
+
   return messages.map(msg => {
-    const senderProfile = usersMap[msg.sender_id] || null;
+    let senderProfile = usersMap[msg.sender_id] || null;
+
+    if (!senderProfile) {
+      senderProfile = msg.sender_role === 'admin' ? adminProfile : targetUserProfile;
+    }
+
     const mine = msg.sender_id === currentUserId;
-    const canManage = canManageAny || mine;
-    const roleText = msg.sender_role === 'admin' ? 'Admin' : 'İstifadəçi';
+    const canManage = mine;
+    const roleText = senderProfile?.role === 'admin' || msg.sender_role === 'admin' ? 'Admin' : 'İstifadəçi';
 
     return `
       <div class="message-row ${mine ? 'mine' : 'theirs'}">
@@ -274,6 +386,7 @@ function renderMessageRows(messages, usersMap, currentUserId, canManageAny = fal
           <div class="message-top">
             <div class="message-avatar">
               <img src="${avatarUrl(senderProfile)}" alt="${escapeHtml(fullName(senderProfile))}">
+              ${avatarStatusDot(senderProfile)}
             </div>
             <div>
               <div class="message-name">${escapeHtml(fullName(senderProfile))}</div>
@@ -284,7 +397,10 @@ function renderMessageRows(messages, usersMap, currentUserId, canManageAny = fal
           <div class="message-text">${escapeHtml(msg.message || '')}</div>
 
           <div class="message-bottom">
-            <span class="message-time">${formatDateTime(msg.updated_at || msg.created_at)}${msg.updated_at && msg.updated_at !== msg.created_at ? ' • redaktə edildi' : ''}</span>
+            <span class="message-time">
+              ${formatDateTime(msg.created_at)}
+              ${shouldShowEdited(msg) ? ' • redaktə edildi' : ''}
+            </span>
             <div class="message-actions">
               ${canManage ? `<button class="message-action-btn edit-message-btn" type="button" data-id="${msg.id}" data-text="${escapeHtml(msg.message || '')}">Redaktə</button>` : ''}
               ${canManage ? `<button class="message-action-btn delete-message-btn" type="button" data-id="${msg.id}">Sil</button>` : ''}
@@ -295,6 +411,9 @@ function renderMessageRows(messages, usersMap, currentUserId, canManageAny = fal
     `;
   }).join('');
 }
+
+
+
 
 async function markConversationRead(chatUserId, viewerRole) {
   if (!chatUserId) return;
@@ -977,6 +1096,9 @@ async function initMessages() {
     }
   });
 
+                                                setupPresenceTracking();
+                                                await setupGlobalMessageNotifications();
+  
   await renderAll();
 
   if (liveMessageChannel) {
@@ -1278,6 +1400,8 @@ async function initAdmin() {
   }
   
     await Promise.all([loadStats(), loadListings(), loadUsers()]);
+            setupPresenceTracking();
+          await setupGlobalMessageNotifications();
   await loadMessages();
 }
 
@@ -1323,6 +1447,10 @@ async function init() {
   if (page === 'favorites') await initFavorites();
   if (page === 'messages') await initMessages();
   if (page === 'admin') await initAdmin();
+
+  setupPresenceTracking();
+  await setupGlobalMessageNotifications();
+  await refreshMessageBadge();
 }
 
 
