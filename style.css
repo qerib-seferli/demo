@@ -2079,7 +2079,7 @@ select option { color: #111; }
 
 .circle-switches {
   display: grid;
-  grid-template-columns: repeat(2.5, minmax(0,1fr));   /* Vəziyyət və Əlavələr 3 yan-yana */
+  grid-template-columns: repeat(2, minmax(0,1fr));   /* Vəziyyət və Əlavələr 3 yan-yana */
   gap: 8px;
 }
 
