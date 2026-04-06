@@ -2224,6 +2224,13 @@ select option { color: #111; }
 
 
 
+@media (min-width: 641px) {
+  .search-btn-mobile {
+    width: 130px;
+    max-width: 130px;
+  }
+}
+
 
 
 
@@ -2244,7 +2251,7 @@ select option { color: #111; }
   .stat { padding: 10px; }
   .stat strong { font-size: 16px; }
   .quick-filter-row { grid-template-columns: 1fr 1fr; }
-  .search-btn-mobile { grid-column: 1 / -1; width: 50%; }
+  .search-btn-mobile { grid-column: 1 / -1; width: 100%; }
   .filter-grid { grid-template-columns: 1fr; }
   .field-inline, .mobile-single-inline { grid-template-columns: repeat(2, minmax(0,1fr)); }            /* Telefonda da min/max sahələr yan-yana */
   .cards-grid, .mobile-cards-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
