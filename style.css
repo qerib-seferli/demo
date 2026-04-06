@@ -2230,32 +2230,81 @@ select option { color: #111; }
 }
 
 
-/* İndex.html də olan Son elan kart stili */
+
+
+/* =======================================================
+   İNDEX.HTML → SON ELAN KARTLARI PREMIUM DİZAYN STİLİ
+   ======================================================= */
+
+/* Kartın ümumi görünüşü */
 .listing-card-pro {
   overflow: hidden;
   border-radius: 20px;
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 
+/* Mouse üzərinə gələndə hover effekti */
 .listing-card-pro:hover {
   transform: translateY(-2px);
   border-color: rgba(227,10,23,.24);
   box-shadow: 0 16px 36px rgba(0,0,0,.40);
 }
 
+
+/* Şəkil hissəsinə kliklənən link */
 .card-media-link {
   display: block;
   text-decoration: none;
   color: inherit;
+  position: relative;
 }
 
+
+/* VIP badge - sol yuxarı gold neon */
 .card-vip-badge {
   position: absolute;
   top: 10px;
   left: 10px;
   z-index: 4;
+
+  background: linear-gradient(135deg, #ffd700, #ffcc00, #fff2a8); /* Gold fon */
+  color: #121212;
+  border: 1px solid rgba(255,215,0,.7);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-weight: 700;
+  font-size: 12px;
+
+  box-shadow:
+    0 0 10px rgba(255,215,0,.35),
+    0 0 20px rgba(255,215,0,.18);
+
+  animation: vipGlow 1.6s infinite alternate;
 }
 
+/* VIP tac ikonuna boşluq */
+.card-vip-badge i {
+  margin-right: 6px;
+}
+
+
+/* Gold neon animasiya */
+@keyframes vipGlow {
+  0% {
+    box-shadow:
+      0 0 10px rgba(255,215,0,.25),
+      0 0 20px rgba(255,215,0,.10);
+  }
+
+  100% {
+    box-shadow:
+      0 0 18px rgba(255,215,0,.55),
+      0 0 34px rgba(255,215,0,.25);
+  }
+}
+
+
+/* Qiymət + marka model link hissəsi */
 .listing-main-link {
   display: grid;
   gap: 4px;
@@ -2263,21 +2312,29 @@ select option { color: #111; }
   color: inherit;
 }
 
+
+/* Kart body boşluqları */
 .listing-card-body-pro {
   gap: 10px;
 }
 
+
+/* Yeni / Kredit / Barter hissəsi */
 .listing-flags-pro {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
+
+/* Ümumi flag görünüşü */
 .condition-flag {
   border-color: rgba(255,255,255,.18);
   color: #fff;
 }
 
+
+/* Yeni badge sarı neon */
 .condition-yeni {
   border-color: rgba(255,193,7,.58);
   color: #fff1a8;
@@ -2286,79 +2343,114 @@ select option { color: #111; }
     0 0 18px rgba(255,193,7,.10);
 }
 
+
+/* İl + yürüş hissəsi */
 .listing-meta-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;   /* Yan-yana düzülüş */
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;                /* Alt alta düşməsin */
   color: #d7d7d7;
   font-size: 13px;
 }
 
+
+/* İl və yürüş badge görünüşü */
 .listing-meta-row span {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  flex: 1;
   gap: 6px;
   min-height: 32px;
   padding: 0 10px;
   border-radius: 999px;
+  white-space: nowrap;
   background: rgba(255,255,255,.03);
   border: 1px solid rgba(255,255,255,.08);
 }
 
+
+/* Alt butonlar */
 .listing-card-footer-pro {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
 
+
+/* Maraqlanıram */
 .interest-btn {
   min-width: 0;
 }
 
+
+/* WhatsApp */
 .whatsapp-card-btn {
   min-width: 0;
 }
 
+
+/* İkon ölçüləri */
 .whatsapp-card-btn i,
 .interest-btn i {
   font-size: 16px;
 }
 
+
+
+/* =======================================================
+   TELEFON GÖRÜNÜŞÜ
+   ======================================================= */
+
 @media (max-width: 768px) {
+
+  /* Kart iç boşluqları */
   .listing-card-body-pro {
     gap: 8px;
   }
 
+  /* Qiymət */
   .listing-main-text .price {
     font-size: 18px;
   }
 
+  /* Marka model */
   .listing-main-text .card-title {
     font-size: 14px;
     line-height: 1.25;
   }
 
+  /* Flag araları */
   .listing-flags-pro {
     gap: 6px;
   }
 
+  /* Flag ölçüsü */
   .listing-flag {
     min-height: 30px;
     padding: 0 9px;
     font-size: 11px;
   }
 
+  /* İl + yürüş telefonda da yan-yana */
   .listing-meta-row {
     gap: 6px;
     font-size: 11px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
   }
 
   .listing-meta-row span {
     min-height: 28px;
     padding: 0 8px;
+    flex: 1;
+    white-space: nowrap;
+    justify-content: center;
   }
 
+  /* Butonlar */
   .listing-card-footer-pro {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
@@ -2374,7 +2466,18 @@ select option { color: #111; }
   .interest-btn i {
     font-size: 14px;
   }
+
+  /* VIP mobil */
+  .card-vip-badge {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
 }
+
+
+
+
+
 
 
 
