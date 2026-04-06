@@ -2199,10 +2199,10 @@ select option { color: #111; }
   gap: 8px;
 }
 
-.vip-filter-btn,
+/*.vip-filter-btn,
 .search-btn-mobile {
   /*width: 100%;*/
-  display: block;
+  /*display: block;
   margin-top: 8px;
 }
 
@@ -2210,10 +2210,10 @@ select option { color: #111; }
   .vip-filter-btn,
   .search-btn-mobile {
     /*width: 100%;*/
-    font-size: 12px;
+    /*font-size: 12px;
     min-height: 42px;
     padding: 10px 8px;
-  }
+  }*/
 }
 
 
