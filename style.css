@@ -2158,6 +2158,7 @@ select option { color: #111; }
 }
 
 
+
 /* VİP Elnanlara bax bölməsi */
 .vip-filter-btn {
   width: 100%;
@@ -2192,7 +2193,28 @@ select option { color: #111; }
 }
 
 
+.quick-filter-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr)); /* Marka + Model */
+  gap: 8px;
+}
 
+.vip-filter-btn,
+.search-btn-mobile {
+  width: 100%;
+  display: block;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .vip-filter-btn,
+  .search-btn-mobile {
+    width: 100%;
+    font-size: 12px;
+    min-height: 42px;
+    padding: 10px 8px;
+  }
+}
 
 
 
