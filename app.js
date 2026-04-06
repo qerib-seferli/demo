@@ -1000,6 +1000,19 @@ async function initHome() {
     qs('#advancedFilters')?.classList.toggle('collapsed');
   });
 
+  // Vip elanlara bax funkusiyası
+  qs('#showVipOnly')?.addEventListener('click', async () => {
+  const { data } = await supabaseClient
+    .from('elanlar')
+    .select('*')
+    .eq('is_active', true)
+    .eq('is_vip', true)
+    .order('created_at', { ascending: false });
+
+  renderListingGrid(data || [], await getFavoriteIds(), qs('#listingGrid'));
+  });
+
+  
   refreshMessageBadge();
 }
 
