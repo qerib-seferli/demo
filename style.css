@@ -2263,31 +2263,36 @@ select option { color: #111; }
   display: block;
 }
 
-/* VIP tacı - sol yuxarı, yığcam gold */
+/* VIP tacı - sol yuxarı tam yuvarlaq gold dairə */
 .card-vip-badge {
   position: absolute;
   top: 8px;
   left: 8px;
   z-index: 4;
-  width: 24px;
-  height: 24px;
-  display: grid;
-  place-items: center;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ffd700, #ffcc00, #fff2a8);
+  background: radial-gradient(circle at 30% 30%, #fff2a8 0%, #ffd700 45%, #ffcc00 75%, #d4a400 100%);
   color: #111111;
-  border: 1px solid rgba(255,215,0,.72);
+  border: 1px solid rgba(255,215,0,.78);
   box-shadow:
-    0 0 8px rgba(255,215,0,.28),
-    0 0 16px rgba(255,215,0,.14);
+    0 0 8px rgba(255,215,0,.30),
+    0 0 16px rgba(255,215,0,.15);
   animation: vipGlow 1.6s infinite alternate;
+  overflow: hidden;
 }
 
-/* Tac icon ölçüsü */
+/* Tac icon */
 .card-vip-badge i {
-  margin-right: 0;
+  margin: 0;
   font-size: 11px;
+  line-height: 1;
 }
 
 /* Gold neon animasiya */
@@ -2301,7 +2306,7 @@ select option { color: #111; }
   100% {
     box-shadow:
       0 0 14px rgba(255,215,0,.42),
-      0 0 26px rgba(255,215,0,.16);
+      0 0 24px rgba(255,215,0,.16);
   }
 }
 
@@ -2340,14 +2345,15 @@ select option { color: #111; }
 /* Qiymət + marka model hissəsi */
 .listing-main-link {
   display: grid;
-  gap: 4px;
+  gap: 2px;
   text-decoration: none;
   color: inherit;
 }
 
 /* Kart iç boşluqları */
 .listing-card-body-pro {
-  gap: 8px;
+  padding-top: 10px;
+  gap: 5px;
 }
 
 /* Qiymət */
@@ -2355,7 +2361,7 @@ select option { color: #111; }
   font-size: 18px;
   font-weight: 800;
   color: #111111;
-  line-height: 1.15;
+  line-height: 1.1;
 }
 
 /* Marka model */
@@ -2363,27 +2369,37 @@ select option { color: #111; }
   font-size: 16px;
   font-weight: 600;
   color: #111111;
-  line-height: 1.25;
+  line-height: 1.18;
 }
 
-/* İl + mühərrik eyni sətirdə */
+/* İl + mühərrik eyni sətirdə, daha yığcam */
 .listing-info-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
-  flex-wrap: nowrap;
   color: #333333;
   font-size: 12px;
+  line-height: 1.15;
 }
 
-/* İl və mühərrik sadə yazı formatında */
-.listing-info-row span {
+/* İl hissəsi */
+.listing-year {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  flex: 1;
+  gap: 5px;
+  white-space: nowrap;
   min-width: 0;
+}
+
+/* Mühərrik hissəsi */
+.listing-engine {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -2393,12 +2409,13 @@ select option { color: #111; }
   align-items: center;
   color: #333333;
   font-size: 12px;
+  line-height: 1.15;
 }
 
 .listing-mileage-row span {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   white-space: nowrap;
 }
 
@@ -2414,7 +2431,8 @@ select option { color: #111; }
 
   /* Kart iç boşluqları */
   .listing-card-body-pro {
-    gap: 7px;
+    padding-top: 9px;
+    gap: 4px;
   }
 
   /* Qiymət */
@@ -2425,7 +2443,7 @@ select option { color: #111; }
   /* Marka model */
   .card-title {
     font-size: 14px;
-    line-height: 1.25;
+    line-height: 1.16;
   }
 
   /* İl + mühərrik */
@@ -2434,8 +2452,12 @@ select option { color: #111; }
     font-size: 11px;
   }
 
-  .listing-info-row span {
-    gap: 5px;
+  .listing-year {
+    gap: 4px;
+  }
+
+  .listing-engine {
+    gap: 4px;
   }
 
   /* Yürüş */
@@ -2447,6 +2469,8 @@ select option { color: #111; }
   .card-vip-badge {
     width: 20px;
     height: 20px;
+    min-width: 20px;
+    min-height: 20px;
     top: 6px;
     left: 6px;
   }
