@@ -748,6 +748,20 @@ function createCard(item, favoriteIds = []) {
           </button>
         </div>
 
+        <div class="card-corner-icons">
+          ${item.is_credit ? `
+            <span class="corner-icon credit-corner-icon" title="Kredit">
+              <i class="fa-solid fa-percent"></i>
+            </span>
+          ` : ''}
+
+          ${item.is_barter ? `
+            <span class="corner-icon barter-corner-icon" title="Barter">
+              <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            </span>
+          ` : ''}
+        </div>
+
         <div class="slide-dots">
           ${images.map((_, i) => `<span class="${i === 0 ? 'active' : ''}"></span>`).join('')}
         </div>
@@ -763,18 +777,6 @@ function createCard(item, favoriteIds = []) {
           <span class="listing-flag condition-flag condition-${conditionText.toLowerCase()}">
             <i class="fa-solid fa-car-side"></i> ${conditionText}
           </span>
-
-          ${item.is_credit ? `
-            <span class="listing-flag credit-flag">
-              <i class="fa-solid fa-wallet"></i> Kredit
-            </span>
-          ` : ''}
-
-          ${item.is_barter ? `
-            <span class="listing-flag barter-flag">
-              <i class="fa-solid fa-arrow-right-arrow-left"></i> Barter
-            </span>
-          ` : ''}
         </div>
 
         <div class="listing-meta-row">
@@ -782,18 +784,8 @@ function createCard(item, favoriteIds = []) {
           <span><i class="fa-solid fa-road"></i> ${Number(item.mileage || 0).toLocaleString('az-AZ')} km</span>
         </div>
 
-        <div class="card-footer listing-card-footer listing-card-footer-pro">
-          <button class="btn btn-outline interest-btn" type="button" data-interest="${item.id}">
-            <i class="fa-regular fa-paper-plane"></i> Maraqlanıram
-          </button>
-
-          <a
-            class="btn btn-green whatsapp-card-btn"
-            target="_blank"
-            href="https://wa.me/994517089500?text=${encodeURIComponent(`Salam, ${item.brand} ${item.model} ${item.year ? '(' + item.year + ')' : ''} elanıyla maraqlanıram.`)}"
-          >
-            <i class="fa-brands fa-whatsapp"></i> WhatsApp
-          </a>
+        <div class="listing-engine-row">
+          <i class="fa-solid fa-gauge-high"></i> ${item.engine || '-'}
         </div>
       </div>
     </article>
