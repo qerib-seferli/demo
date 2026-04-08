@@ -769,8 +769,8 @@ function createCard(item, favoriteIds = []) {
         </a>
 
         <div class="listing-info-row">
-          <span><i class="fa-regular fa-calendar"></i> ${item.year || '-'}</span>
-          <span><i class="fa-solid fa-gauge-high"></i> ${item.engine || '-'}</span>
+          <span class="listing-year"><i class="fa-regular fa-calendar"></i> ${item.year || '-'}</span>
+          <span class="listing-engine"><i class="fa-solid fa-gauge-high"></i> ${item.engine || '-'}</span>
         </div>
 
         <div class="listing-mileage-row">
