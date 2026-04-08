@@ -2236,17 +2236,16 @@ select option { color: #111; }
 /* Kartın ümumi görünüşü */
 .listing-card-pro {
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 18px;
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 
 /* Mouse üzərinə gələndə hover effekti */
 .listing-card-pro:hover {
   transform: translateY(-2px);
-  border-color: rgba(227,10,23,.24);
-  box-shadow: 0 16px 36px rgba(0,0,0,.40);
+  border-color: rgba(227,10,23,.18);
+  box-shadow: 0 12px 28px rgba(0,0,0,.12);
 }
-
 
 /* Şəkil hissəsinə kliklənən link */
 .card-media-link {
@@ -2256,50 +2255,73 @@ select option { color: #111; }
   position: relative;
 }
 
-
-/* VIP badge - sol yuxarı gold neon */
+/* VIP badge - sol yuxarı yığcam gold */
 .card-vip-badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
   z-index: 4;
-
-  background: linear-gradient(135deg, #ffd700, #ffcc00, rgba(0,0,0,.16)); /* Gold fon */
+  background: linear-gradient(135deg, #ffd700, #ffcc00, #fff2a8);
   color: #111111;
-  border: 1px solid rgba(255,215,0,.7);
+  border: 1px solid rgba(255,215,0,.72);
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 4px 8px;
   font-weight: 700;
-  font-size: 12px;
-
+  font-size: 10px;
   box-shadow:
-    0 0 10px rgba(255,215,0,.35),
-    0 0 20px rgba(255,215,0,.18);
-
+    0 0 8px rgba(255,215,0,.28),
+    0 0 16px rgba(255,215,0,.14);
   animation: vipGlow 1.6s infinite alternate;
 }
 
 /* VIP tac ikonuna boşluq */
 .card-vip-badge i {
-  margin-right: 6px;
+  margin-right: 5px;
 }
-
 
 /* Gold neon animasiya */
 @keyframes vipGlow {
   0% {
     box-shadow:
-      0 0 10px rgba(255,215,0,.25),
-      0 0 20px rgba(255,215,0,.10);
+      0 0 8px rgba(255,215,0,.20),
+      0 0 16px rgba(255,215,0,.08);
   }
 
   100% {
     box-shadow:
-      0 0 18px rgba(255,215,0,.55),
-      0 0 34px rgba(255,215,0,.25);
+      0 0 14px rgba(255,215,0,.42),
+      0 0 26px rgba(255,215,0,.16);
   }
 }
 
+/* Sağ aşağı kredit/barter iconları */
+.card-corner-icons {
+  position: absolute;
+  right: 8px;
+  bottom: 10px;
+  z-index: 4;
+  display: flex;
+  gap: 6px;
+}
+
+.corner-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,.12);
+}
+
+.credit-corner-icon {
+  background: #66bb22;
+}
+
+.barter-corner-icon {
+  background: #f4a021;
+}
 
 /* Qiymət + marka model link hissəsi */
 .listing-main-link {
@@ -2309,49 +2331,44 @@ select option { color: #111; }
   color: inherit;
 }
 
-
 /* Kart body boşluqları */
 .listing-card-body-pro {
-  gap: 10px;
-}
-
-
-/* Yeni / Kredit / Barter hissəsi */
-.listing-flags-pro {
-  display: flex;
-  flex-wrap: wrap;
   gap: 8px;
 }
 
+/* Yeni / Sürülmüş hissəsi */
+.listing-flags-pro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 
 /* Ümumi flag görünüşü */
 .condition-flag {
-  border-color: rgba(0,0,0,.18);
+  border-color: rgba(0,0,0,.10);
   color: #111111;
+  background: rgba(0,0,0,.03);
 }
 
-
-/* Yeni badge sarı neon */
+/* Yeni badge sarı vurğu */
 .condition-yeni {
-  border-color: rgba(255,193,7,.58);
+  border-color: rgba(255,193,7,.50);
   color: #111111;
   box-shadow:
-    0 0 8px rgba(255,193,7,.20),
-    0 0 18px rgba(255,193,7,.10);
+    0 0 6px rgba(255,193,7,.14),
+    0 0 14px rgba(255,193,7,.08);
 }
-
 
 /* İl + yürüş hissəsi */
 .listing-meta-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;   /* Yan-yana düzülüş */
-  gap: 10px;
-  flex-wrap: nowrap;                /* Alt alta düşməsin */
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: nowrap;
   color: #333333;
-  font-size: 13px;
+  font-size: 12px;
 }
-
 
 /* İl və yürüş badge görünüşü */
 .listing-meta-row span {
@@ -2360,78 +2377,52 @@ select option { color: #111; }
   justify-content: center;
   flex: 1;
   gap: 6px;
-  min-height: 32px;
-  padding: 0 10px;
+  min-height: 30px;
+  padding: 0 8px;
   border-radius: 999px;
   white-space: nowrap;
   background: rgba(0,0,0,.03);
   border: 1px solid rgba(0,0,0,.08);
 }
 
-
-/* Alt butonlar */
-.listing-card-footer-pro {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+/* Mühərrik sətri */
+.listing-engine-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #222222;
+  min-height: 24px;
 }
-
-
-/* Maraqlanıram */
-.interest-btn {
-  min-width: 0;
-}
-
-
-/* WhatsApp */
-.whatsapp-card-btn {
-  min-width: 0;
-}
-
-
-/* İkon ölçüləri */
-.whatsapp-card-btn i,
-.interest-btn i {
-  font-size: 16px;
-}
-
-
 
 /* =======================================================
    TELEFON GÖRÜNÜŞÜ
    ======================================================= */
 
 @media (max-width: 768px) {
-
-  /* Kart iç boşluqları */
   .listing-card-body-pro {
-    gap: 8px;
+    gap: 7px;
   }
 
-  /* Qiymət */
   .listing-main-text .price {
-    font-size: 18px;
+    font-size: 17px;
   }
 
-  /* Marka model */
   .listing-main-text .card-title {
     font-size: 14px;
     line-height: 1.25;
   }
 
-  /* Flag araları */
   .listing-flags-pro {
-    gap: 6px;
+    gap: 5px;
   }
 
-  /* Flag ölçüsü */
   .listing-flag {
-    min-height: 30px;
-    padding: 0 9px;
-    font-size: 11px;
+    min-height: 28px;
+    padding: 0 8px;
+    font-size: 10px;
   }
 
-  /* İl + yürüş telefonda da yan-yana */
   .listing-meta-row {
     gap: 6px;
     font-size: 11px;
@@ -2447,27 +2438,27 @@ select option { color: #111; }
     justify-content: center;
   }
 
-  /* Butonlar */
-  .listing-card-footer-pro {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .listing-card-footer-pro .btn {
-    min-height: 40px;
+  .listing-engine-row {
     font-size: 12px;
-    padding: 0 8px;
   }
 
-  .whatsapp-card-btn i,
-  .interest-btn i {
-    font-size: 14px;
-  }
-
-  /* VIP mobil */
   .card-vip-badge {
+    font-size: 9px;
+    padding: 4px 7px;
+    top: 7px;
+    left: 7px;
+  }
+
+  .corner-icon {
+    width: 22px;
+    height: 22px;
     font-size: 10px;
-    padding: 5px 10px;
+  }
+
+  .card-corner-icons {
+    right: 7px;
+    bottom: 9px;
+    gap: 5px;
   }
 }
 
