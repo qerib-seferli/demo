@@ -2681,7 +2681,77 @@ select option { color: #111; }
 }
 
 
+/*Admin panel telefonda yaxşı görsənsin*/
+@media (max-width: 768px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 
+  .kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .table {
+    min-width: 100%;
+  }
+
+  .admin-users-table,
+  .admin-listings-table {
+    min-width: 640px;
+  }
+
+  .table th,
+  .table td {
+    padding: 9px 8px;
+    font-size: 12px;
+  }
+
+  .table-card,
+  .form-card {
+    padding: 10px;
+  }
+
+  .admin-action-stack,
+  .user-actions,
+  .users-head-actions,
+  .users-toolbar-actions {
+    gap: 6px;
+  }
+
+  .admin-action-stack .btn,
+  .user-actions .btn,
+  .users-toolbar-actions .btn {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .admin-listings-scroll {
+    max-height: 380px;
+  }
+
+  .users-toolbar {
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .users-search-field {
+    flex: 1 1 100%;
+  }
+
+  .chat-workspace,
+  .admin-chat-workspace {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .chat-thread-panel,
+  .chat-sidebar-panel {
+    min-height: auto;
+  }
+}
 
 
 
