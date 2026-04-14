@@ -2332,40 +2332,81 @@ if (brandsMarquee) {
 
 let deferredPrompt = null;
 
+const installWrap = document.getElementById("pwaInstallWrap");
+const installBtn = document.getElementById("installAppBtn");
+const iosInstallHelp = document.getElementById("iosInstallHelp");
+
+function isIos() {
+    return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+}
+
+function isInStandaloneMode() {
+    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function hideInstallUI() {
+    if (installWrap) installWrap.hidden = true;
+    if (installBtn) installBtn.style.display = "none";
+    if (iosInstallHelp) iosInstallHelp.style.display = "none";
+}
+
+function showAndroidInstallButton() {
+    if (installWrap) installWrap.hidden = false;
+    if (installBtn) installBtn.style.display = "inline-flex";
+    if (iosInstallHelp) iosInstallHelp.style.display = "none";
+}
+
+function showIosInstallHelp() {
+    if (installWrap) installWrap.hidden = false;
+    if (installBtn) installBtn.style.display = "none";
+    if (iosInstallHelp) iosInstallHelp.style.display = "block";
+}
+
+function setupInstallUI() {
+    if (isInStandaloneMode()) {
+        hideInstallUI();
+        return;
+    }
+
+    if (isIos()) {
+        showIosInstallHelp();
+        return;
+    }
+
+    hideInstallUI();
+}
+
 window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
 
-    const installBtn = document.getElementById("installAppBtn");
-    if (installBtn) {
-        installBtn.style.display = "inline-flex";
+    if (!isInStandaloneMode() && !isIos()) {
+        showAndroidInstallButton();
     }
 });
 
 window.addEventListener("appinstalled", () => {
-    console.log("Tətbiq quraşdırıldı");
     deferredPrompt = null;
-
-    const installBtn = document.getElementById("installAppBtn");
-    if (installBtn) {
-        installBtn.style.display = "none";
-    }
+    hideInstallUI();
+    console.log("Tətbiq quraşdırıldı");
 });
 
 async function installPWA() {
     if (!deferredPrompt) {
-        alert("Hazırda quraşdırma mümkün deyil.");
         return;
     }
 
     deferredPrompt.prompt();
-    const choice = await deferredPrompt.userChoice;
-    console.log(choice.outcome);
-
+    await deferredPrompt.userChoice;
     deferredPrompt = null;
+    hideInstallUI();
 }
 
 window.installPWA = installPWA;
+
+document.addEventListener("DOMContentLoaded", () => {
+    setupInstallUI();
+});
 
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", async () => {
@@ -2377,6 +2418,7 @@ if ("serviceWorker" in navigator) {
         }
     });
 }
+
 
 
 document.addEventListener('DOMContentLoaded', init);
