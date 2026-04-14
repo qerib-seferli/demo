@@ -19,15 +19,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="home">
-  <header class="site-header">
-
-                  <!-- Yuxarı orta install button -->
-                  
-                    <button id="installAppBtn" onclick="installPWA()">
-                      Tətbiqi yüklə
-                    </button>
-                  
-    
+  <header class="site-header">    
     <div class="container header-row compact-header">
       <a class="brand" href="index.html">
         <img class="brand-logo" src="foto/elit_avto_777_logo.png" alt="ELİT AVTO 777">
@@ -49,7 +41,25 @@
     <div class="container home-stack">
       <section class="hero panel">
         <div class="hero-card hero-compact">
-          <!--<span class="badge"><i class="fa-solid fa-bolt"></i> Mobile-first premium UI</span>-->
+          
+
+
+          
+          <span class="badge"><i class="fa-solid fa-bolt"></i> 
+            <div id="pwaInstallWrap" class="pwa-install-wrap" hidden>
+                <button id="installAppBtn" type="button" onclick="installPWA()">
+                  Tətbiqi yüklə
+                </button>
+
+            <div id="iosInstallHelp" class="ios-install-help" hidden>
+                iPhone/iPad üçün: Safari-də paylaş düyməsinə vur → “Add to Home Screen”
+            </div>
+          </div>
+        </span>
+
+
+          
+          
           <h2>Bərdə şəhərində</h2>
           <p>güvənli avtomobil alqı-satqısı</p>
           <div class="stats mobile-stats">
