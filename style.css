@@ -4039,3 +4039,35 @@ select option {
 .nav-row a:hover .home-fab i {
   color: #E30A17 !important;
 }
+
+
+
+
+
+
+
+/* ----------------------------------------------------
+   TƏTBİQİ YÜKLƏ BUTONU STİLİ
+   ----------------------------------------------------*/
+
+#installAppBtn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #d4af37, #f5d76e);
+    color: #111;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
+    transition: all 0.3s ease;
+}
+
+#installAppBtn:hover {
+    transform: translateY(-2px) scale(1.03);
+}
+
+
