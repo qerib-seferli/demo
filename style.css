@@ -4050,34 +4050,24 @@ select option {
    TƏTBİQİ YÜKLƏ BUTONU STİLİ
    ----------------------------------------------------*/
 
-.site-header{
-    position: relative;
-}
-
-.install-top-center{
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-}
-
-#installAppBtn{
-    padding: 10px 22px;
+#installAppBtn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
     border: none;
     border-radius: 14px;
-    background: linear-gradient(135deg, #d4af37, #fff5cc);
+    background: linear-gradient(135deg, #d4af37, #f5d76e);
     color: #111;
+    font-size: 16px;
     font-weight: 700;
-    font-size: 14px;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(212,175,55,0.35);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.25);
     transition: all 0.3s ease;
 }
 
-#installAppBtn:hover{
-    transform: scale(1.05);
-    box-shadow: 0 12px 25px rgba(212,175,55,0.45);
+#installAppBtn:hover {
+    transform: translateY(-2px) scale(1.03);
 }
 
 
