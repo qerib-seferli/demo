@@ -2324,4 +2324,59 @@ if (brandsMarquee) {
 
 
 
+
+
+/* =========================================
+   PWA INSTALL + SERVICE WORKER
+========================================= */
+
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const installBtn = document.getElementById("installAppBtn");
+    if (installBtn) {
+        installBtn.style.display = "inline-flex";
+    }
+});
+
+window.addEventListener("appinstalled", () => {
+    console.log("Tətbiq quraşdırıldı");
+    deferredPrompt = null;
+
+    const installBtn = document.getElementById("installAppBtn");
+    if (installBtn) {
+        installBtn.style.display = "none";
+    }
+});
+
+async function installPWA() {
+    if (!deferredPrompt) {
+        alert("Hazırda quraşdırma mümkün deyil.");
+        return;
+    }
+
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    console.log(choice.outcome);
+
+    deferredPrompt = null;
+}
+
+window.installPWA = installPWA;
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+        try {
+            await navigator.serviceWorker.register("./service-worker.js");
+            console.log("Service worker qoşuldu");
+        } catch (error) {
+            console.error("SW xəta:", error);
+        }
+    });
+}
+
+
 document.addEventListener('DOMContentLoaded', init);
